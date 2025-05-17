@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import DailyRoutine from "./pages/DailyRoutine";
 import MyPath from "./pages/MyPath";
 import { Ionicons } from "@expo/vector-icons";
+import ExercisesList from "./pages/ExercisesList";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +41,7 @@ export default function App() {
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Your Daily Tasks" component={DailyRoutine} />
                 <Tab.Screen name="My Path" component={MyPath} />
+                <Tab.Screen name="Exercises list" component={ExercisesList} />
             </Tab.Navigator>
         </NavigationContainer>
     );

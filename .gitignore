@@ -59,3 +59,11 @@ backend/.ipynb_checkpoints/
 # VSCode config (optional)
 backend/.vscode/
 
+# .env
+.env
+
+# seriviceAccountKey
+serviceAccountKey.json
+
+# .db
+*.db

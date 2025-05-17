@@ -1,0 +1,28 @@
+const generatedOptionsForExerciseCharacteristics = {
+    force: ["static", "pull", "push"],
+    level: ["expert", "beginner", "intermediate"],
+    mechanic: ["isolation", "compound"],
+    equipment: [
+        "medicine ball",
+        "dumbbell",
+        "other",
+        "body only",
+        "bands",
+        "kettlebells",
+        "foam roll",
+        "cable",
+        "barbell",
+        "machine",
+        "exercise ball",
+        "e-z curl bar",
+    ],
+    category: [
+        "cardio",
+        "olympic weightlifting",
+        "strongman",
+        "plyometrics",
+        "powerlifting",
+        "stretching",
+        "strength",
+    ],
+};
