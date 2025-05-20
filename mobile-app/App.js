@@ -3,9 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "./pages/HomePage";
 import DailyRoutine from "./pages/DailyRoutine";
-import MyPath from "./pages/MyPath";
+import MyPathStack from "./components/MyPathStack";
 import { Ionicons } from "@expo/vector-icons";
-import ExercisesList from "./pages/ExercisesList";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,17 +33,27 @@ export default function App() {
                             />
                         );
                     },
-                    tabBarActiveTintColor: "black",
-                    tabBarInactiveTintColor: "gray",
+                    tabBarActiveTintColor: "#27374D",
+                    tabBarInactiveTintColor: "#27374D",
+                    tabBarStyle: {
+                        backgroundColor: "#9DB2BF",
+                    },
                 })}
             >
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Your Daily Tasks" component={DailyRoutine} />
-                <Tab.Screen name="My Path" component={MyPath} />
-                <Tab.Screen name="Exercises list" component={ExercisesList} />
+                <Tab.Screen
+                    name="My Path"
+                    component={MyPathStack}
+                    options={{ headerShown: false }}
+                />
             </Tab.Navigator>
         </NavigationContainer>
     );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    tab: {
+        backgroundColor: "#9DB2BF",
+    },
+});

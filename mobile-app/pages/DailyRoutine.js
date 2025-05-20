@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
         padding: 10,
+        backgroundColor: "#DDE6ED",
     },
     scrollContent: {
         padding: 10,
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         fontStyle: "italic",
-        color: "#777",
+        color: "#27374D",
     },
     buttons: {
         flexDirection: "row",
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     customButton: {
         flex: 1,
         borderWidth: 1,
-        backgroundColor: "lightgrey",
+        backgroundColor: "#9DB2BF",
         paddingVertical: 12,
         paddingHorizontal: 15,
         borderRadius: 10,

@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
     defaultText: {
         fontFamily: "Arial",
         fontSize: 16,
-        color: "#333",
+        color: "#27374D",
     },
 });
