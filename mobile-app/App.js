@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomePage from "./pages/HomePage";
-import DailyRoutine from "./pages/DailyRoutine";
-import MyPathStack from "./components/MyPathStack";
+import HomePage from "./pages/HomePage/HomePage";
+import DailyRoutine from "./pages/DailyRoutine/DailyRoutine";
+import MyPathStack from "./navigation/MyPathStack";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();

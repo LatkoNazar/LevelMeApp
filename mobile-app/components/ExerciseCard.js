@@ -1,19 +1,9 @@
-﻿// components/ExerciseCard.js
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import * as FileSystem from "expo-file-system";
+﻿import { View, StyleSheet } from "react-native";
 import AppText from "./AppText";
-import PropTypes from "prop-types";
 
 export default function ExerciseCard(props) {
     return (
         <View style={styles.card}>
-            <ScrollView horizontal style={styles.imageContainer}>
-                {props.images &&
-                    props.images.map((img, idx) => (
-                        <Image key={idx} source={img} style={styles.image} />
-                    ))}
-            </ScrollView>
             <AppText style={styles.title}>{props.item.name}</AppText>
             <AppText>Category: {props.item.category}</AppText>
             <AppText>Level: {props.item.level}</AppText>
