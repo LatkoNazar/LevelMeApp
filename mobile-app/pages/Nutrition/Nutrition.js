@@ -3,9 +3,7 @@ import AppText from "../../components/AppText";
 
 export default function Nutrition() {
     return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View style={styles.main}>
             <AppText>Nutrition</AppText>
         </View>
     );
@@ -13,6 +11,9 @@ export default function Nutrition() {
 
 const styles = StyleSheet.create({
     main: {
-        backgroundColor: "#DDE6ED",
+        backgroundColor: "#526D82",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });

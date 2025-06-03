@@ -28,7 +28,7 @@ export default function MyPath() {
 
 const styles = StyleSheet.create({
     main: {
-        backgroundColor: "#DDE6ED",
+        backgroundColor: "#526D82",
     },
     container: {
         flex: 1,

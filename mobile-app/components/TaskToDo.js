@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         flexDirection: "row",
         alignItems: "center",
+        backgroundColor: "#9DB2BF",
     },
 
     check: {

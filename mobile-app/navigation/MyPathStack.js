@@ -7,7 +7,14 @@ const Stack = createNativeStackNavigator();
 
 export default function MyPathStack() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: "#9DB2BF",
+                },
+                headerTintColor: "#27374D",
+            }}
+        >
             <Stack.Screen name="My Path" component={MyPath} />
             <Stack.Screen name="Exercises" component={ExercisesStack} />
             <Stack.Screen name="Nutrition" component={Nutrition} />

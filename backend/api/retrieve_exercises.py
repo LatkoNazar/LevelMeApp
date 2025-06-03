@@ -1,13 +1,21 @@
-﻿from flask import Blueprint, jsonify
-from .app import db
+﻿from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
+from api.db import get_db
 
-api_blueprint = Blueprint("api", __name__)
+router = APIRouter()
 
-@api_blueprint.route("/<category>-exercises")
-def retrieve_all_exercises(category):
+@router.get("/{category}-exercises")
+async def retrieve_all_exercises(
+    category: str,
+    page: int = Query(1, gt=0),
+    per_page: int = Query(50, gt=0),
+    db: AsyncSession = Depends(get_db)
+):
+    offset = (page - 1) * per_page
 
-    base_query = """SELECT
+    base_query = """
+        SELECT
             exercises.*,
             STRING_AGG(DISTINCT primary_muscles.muscle, ',') AS primaryMuscles,
             STRING_AGG(DISTINCT secondary_muscles.muscle, ',') AS secondaryMuscles
@@ -15,14 +23,14 @@ def retrieve_all_exercises(category):
         LEFT JOIN primary_muscles ON exercises.id = primary_muscles.exercise_id
         LEFT JOIN secondary_muscles ON exercises.id = secondary_muscles.exercise_id
         GROUP BY exercises.id
-        """
+    """
 
     def build_having_clause(muscles):
-        conditions = []
-        for muscle in muscles:
-            conditions.append(f"STRING_AGG(DISTINCT primary_muscles.muscle, ',') LIKE '%%{muscle}%%'")
-            conditions.append(f"STRING_AGG(DISTINCT secondary_muscles.muscle, ',') LIKE '%%{muscle}%%'")
-        return "HAVING " + " OR\n       ".join(conditions)
+        conditions = [
+            f"STRING_AGG(DISTINCT primary_muscles.muscle, ',') LIKE '%%{muscle}%%' OR STRING_AGG(DISTINCT secondary_muscles.muscle, ',') LIKE '%%{muscle}%%'"
+            for muscle in muscles
+        ]
+        return "HAVING " + " OR ".join(conditions)
 
     filter_queries = {
         "all": base_query,
@@ -35,16 +43,24 @@ def retrieve_all_exercises(category):
     }
 
     if category not in filter_queries:
-        return jsonify({"error": "Invalid category"}), 400
+        raise HTTPException(status_code=400, detail="Invalid category")
 
+    count_query = f"SELECT COUNT(*) FROM ({filter_queries[category]}) AS subquery"
     try:
-        result = db.session.execute(text(filter_queries[category]))
+        count_result = await db.execute(text(count_query))
+        total_count = count_result.scalar()
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=f"Count error: {str(e)}")
 
-    exercises = []
-    for row in result:
-        exercises.append({
+    final_query = f"{filter_queries[category]} LIMIT {per_page} OFFSET {offset}"
+    try:
+        result = await db.execute(text(final_query))
+        rows = result.fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Query error: {str(e)}")
+
+    exercises = [
+        {
             "id": row.id,
             "name": row.name,
             "force": row.force,
@@ -56,6 +72,13 @@ def retrieve_all_exercises(category):
             "images": row.images,
             "primaryMuscles": row.primarymuscles.split(',') if row.primarymuscles else [],
             "secondaryMuscles": row.secondarymuscles.split(',') if row.secondarymuscles else [],
-        })
+        }
+        for row in rows
+    ]
 
-    return jsonify(exercises)
+    return {
+        "exercises": exercises,
+        "page": page,
+        "per_page": per_page,
+        "total_count": total_count
+    }
