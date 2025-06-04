@@ -6,7 +6,7 @@ import os
 
 from api.db import setup_database
 from api.retrieve_exercises import router as exercises_router
-from api.chatbot import router as chatbot_router
+from chatbot.chatbot import router as chatbot_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
