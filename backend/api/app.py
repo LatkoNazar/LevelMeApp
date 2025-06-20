@@ -7,6 +7,7 @@ import os
 from api.db import setup_database
 from api.retrieve_exercises import router as exercises_router
 from chatbot.chatbot import router as chatbot_router
+from generators.vectorize import router as exercises_test_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -19,6 +20,7 @@ def create_app() -> FastAPI:
 
     app = FastAPI(lifespan=lifespan)
 
+    app.include_router(exercises_test_router)
     app.include_router(exercises_router)
     app.include_router(chatbot_router)
     return app

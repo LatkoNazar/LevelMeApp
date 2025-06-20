@@ -2,6 +2,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from api.db import get_db
+from typing import List, Dict
 
 router = APIRouter()
 
@@ -11,7 +12,7 @@ async def retrieve_all_exercises(
     page: int = Query(1, gt=0),
     per_page: int = Query(50, gt=0),
     db: AsyncSession = Depends(get_db)
-):
+) -> Dict:
     offset = (page - 1) * per_page
 
     base_query = """
@@ -25,7 +26,7 @@ async def retrieve_all_exercises(
         GROUP BY exercises.id
     """
 
-    def build_having_clause(muscles):
+    def build_having_clause(muscles) -> str:
         conditions = [
             f"STRING_AGG(DISTINCT primary_muscles.muscle, ',') LIKE '%%{muscle}%%' OR STRING_AGG(DISTINCT secondary_muscles.muscle, ',') LIKE '%%{muscle}%%'"
             for muscle in muscles

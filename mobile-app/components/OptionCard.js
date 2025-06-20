@@ -5,7 +5,9 @@ export default function OptionCard(props) {
     return (
         <TouchableOpacity onPress={props.handlePress} style={styles.card}>
             <View>
-                <Image source={props.img} style={styles.image} />
+                {props.withImage && (
+                    <Image source={props.img} style={styles.image} />
+                )}
                 <AppText style={styles.text}>{props.text}</AppText>
             </View>
         </TouchableOpacity>

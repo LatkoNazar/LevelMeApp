@@ -3,7 +3,7 @@ from pathlib import Path
 
 from backend.api.app import app, db
 
-def init_db_and_import_data():
+def init_db_and_import_data() -> None:
     with app.app_context():
         db.session.execute(db.text('''
             CREATE TABLE IF NOT EXISTS exercises (

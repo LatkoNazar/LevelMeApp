@@ -8,7 +8,7 @@ DATABASE_URL = None
 engine = None
 async_session = None
 
-def setup_database():
+def setup_database() -> None:
     global DATABASE_URL, engine, async_session
 
     DB_USER = os.getenv('DB_USER')

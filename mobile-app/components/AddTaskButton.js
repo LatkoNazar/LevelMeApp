@@ -34,20 +34,44 @@ export default function AddTaskButton(props) {
             <Modal transparent={true} visible={modalVisible}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <AppText>Enter your task:</AppText>
+                        <AppText style={styles.textModal}>
+                            Enter your task:
+                        </AppText>
                         <TextInput
                             placeholder="Your new task..."
+                            placeholderTextColor="#27374D"
                             value={taskText}
                             onChangeText={setTaskText}
                             style={styles.input}
                         />
                         <View style={styles.buttonGroup}>
-                            <Button title="Add" onPress={handleAdd} />
-                            <Button
-                                title="Cancel"
-                                color="gray"
+                            <TouchableOpacity
+                                style={styles.addButton}
+                                onPress={handleAdd}
+                            >
+                                <AppText
+                                    style={[
+                                        styles.buttonText.base,
+                                        styles.buttonText.add,
+                                    ]}
+                                >
+                                    Add
+                                </AppText>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.cancelButton}
                                 onPress={() => setModalVisible(false)}
-                            />
+                            >
+                                <AppText
+                                    style={[
+                                        styles.buttonText.base,
+                                        styles.buttonText.cancel,
+                                    ]}
+                                >
+                                    Cancel
+                                </AppText>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -62,6 +86,10 @@ AddTaskButton.propTypes = {
 };
 
 const styles = StyleSheet.create({
+    textModal: {
+        fontWeight: "bold",
+        color: "#27374D",
+    },
     buttonWrapper: {
         flex: 1,
     },
@@ -69,12 +97,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "lightgrey",
+        backgroundColor: "#526D82",
     },
 
     modalContent: {
         borderRadius: 10,
-        backgroundColor: "#fff",
+        backgroundColor: "#9DB2BF",
         padding: 20,
         width: "80%",
         alignItems: "center",
@@ -93,5 +121,16 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
+    },
+    buttonText: {
+        base: { fontWeight: "bold" },
+        add: { color: "blue" },
+        cancel: { color: "red" },
+    },
+    addButton: {
+        padding: 5,
+    },
+    cancelButton: {
+        padding: 5,
     },
 });

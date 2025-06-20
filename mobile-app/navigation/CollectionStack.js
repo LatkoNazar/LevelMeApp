@@ -1,11 +1,11 @@
 ﻿import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MyPath from "../pages/MyPath/MyPath";
+import Collection from "../pages/Collection/Collection";
 import ExercisesStack from "./ExercisesStack";
 import Nutrition from "../pages/Nutrition/Nutrition";
 
 const Stack = createNativeStackNavigator();
 
-export default function MyPathStack() {
+export default function CollectionStack() {
     return (
         <Stack.Navigator
             screenOptions={{
@@ -15,7 +15,7 @@ export default function MyPathStack() {
                 headerTintColor: "#27374D",
             }}
         >
-            <Stack.Screen name="My Path" component={MyPath} />
+            <Stack.Screen name="Your Collection" component={Collection} />
             <Stack.Screen name="Exercises" component={ExercisesStack} />
             <Stack.Screen name="Nutrition" component={Nutrition} />
         </Stack.Navigator>

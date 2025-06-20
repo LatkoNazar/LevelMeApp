@@ -1,6 +1,6 @@
 ﻿import { View, Text, ScrollView, StyleSheet } from "react-native";
 import OptionCard from "../../components/OptionCard";
-import MyPathOptionsAssets from "../../assets/generated_objects/MyPathOptionsAssets";
+import CollectionOptionsAssets from "../../assets/generated_objects/CollectionOptionsAssets";
 import { useNavigation } from "@react-navigation/native";
 
 const options = ["Exercises", "Nutrition"];
@@ -15,8 +15,9 @@ export default function MyPath() {
                     <OptionCard
                         key={optionName}
                         optionName={optionName}
-                        img={MyPathOptionsAssets[optionName].img}
-                        text={MyPathOptionsAssets[optionName].text}
+                        img={CollectionOptionsAssets[optionName].img}
+                        text={CollectionOptionsAssets[optionName].text}
+                        withImage={true}
                         styles={styles.optionCardComponent}
                         handlePress={() => navigation.navigate(optionName)}
                     />

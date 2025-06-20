@@ -3,8 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "./pages/HomePage/HomePage";
 import DailyRoutine from "./pages/DailyRoutine/DailyRoutine";
-import MyPathStack from "./navigation/MyPathStack";
-import Assistant from "./pages/Assistant/Assistant";
+import CollectionStack from "./navigation/CollectionStack";
+import AssistantStack from "./navigation/AssistantStack";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native";
 
@@ -40,7 +40,7 @@ export default function App() {
                                 iconName = focused
                                     ? "checkmark-circle"
                                     : "checkmark-circle-outline";
-                            } else if (route.name === "My Path") {
+                            } else if (route.name === "Collection") {
                                 iconName = focused ? "star" : "star-outline";
                             }
                             return (
@@ -64,10 +64,14 @@ export default function App() {
             >
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Your Daily Tasks" component={DailyRoutine} />
-                <Tab.Screen name="Assistant" component={Assistant} />
                 <Tab.Screen
-                    name="My Path"
-                    component={MyPathStack}
+                    name="Assistant"
+                    component={AssistantStack}
+                    options={{ headerShown: false }}
+                />
+                <Tab.Screen
+                    name="Collection"
+                    component={CollectionStack}
                     options={{ headerShown: false }}
                 />
             </Tab.Navigator>

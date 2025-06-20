@@ -19,6 +19,9 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { getAnswerWS } from "../../api/chatbotInteraction";
 import { getMarkdownStyles, styles } from "./AssistantStyle";
+import config from "../../config";
+import IconCounter from "../../components/IconCounter";
+import { useNavigation } from "@react-navigation/native";
 
 const MessageBubble = ({ text, isUser, style }) => {
     const textStyle = isUser ? styles.textUser : styles.textBot;
@@ -30,13 +33,16 @@ const MessageBubble = ({ text, isUser, style }) => {
     );
 };
 
-export default function Assistant({ navigation }) {
+export default function Assistant() {
+    const navigation = useNavigation();
+
     const generateId = () =>
         Date.now().toString() + Math.random().toString(36).substring(2, 6);
 
     const headerHeight = useHeaderHeight();
     const [inputText, setInputText] = useState("");
     const [messagesList, setMessagesList] = useState([]);
+    const [generatedContent, setGeneratedContent] = useState([]);
 
     function handleInputChange(text) {
         setInputText(text);
@@ -46,11 +52,11 @@ export default function Assistant({ navigation }) {
         setInputText("");
         setMessagesList([]);
         try {
-            await fetch("http://192.168.0.105:5000/chat/new-chat", {
+            await fetch(`${config.BACKEND_URL}/chat/new-chat`, {
                 method: "POST",
             });
         } catch (error) {
-            console.error("Не вдалось створити нову сесію:", error);
+            console.error("New session is not created successfully:", error);
         }
     }
 
@@ -86,7 +92,7 @@ export default function Assistant({ navigation }) {
                 );
             },
             () => {
-                console.log("Stream завершено");
+                console.log("Stream done");
             },
             (err) => {
                 setMessagesList((prev) =>
@@ -96,21 +102,46 @@ export default function Assistant({ navigation }) {
                                   ...msg,
                                   text:
                                       msg.text +
-                                      "⚠️ Помилка під час отримання відповіді.",
+                                      "⚠️ Error while getting answer.",
                               }
                             : msg
                     )
                 );
+            },
+            (newContent) => {
+                setGeneratedContent((prev) => [
+                    ...prev,
+                    { date: Date(), content: newContent },
+                ]);
             }
         );
     };
 
     useLayoutEffect(() => {
         navigation.setOptions({
+            headerLeft: () => (
+                <View style={{ marginLeft: 20 }}>
+                    <IconCounter
+                        name={
+                            generatedContent.length == 0
+                                ? "folder-outline"
+                                : "folder-open-outline"
+                        }
+                        badgeCount={generatedContent.length}
+                        color="#27374D"
+                        size={30}
+                        handlePress={() => {
+                            navigation.navigate("Generated Results", {
+                                generatedContent: generatedContent,
+                            });
+                        }}
+                    />
+                </View>
+            ),
             headerRight: () => (
                 <TouchableOpacity
                     onPress={() => handleNewChat()}
-                    style={{ marginRight: 15 }} // Додаємо трохи відступу
+                    style={{ marginRight: 20 }}
                 >
                     <AppText
                         style={{
@@ -124,7 +155,7 @@ export default function Assistant({ navigation }) {
                 </TouchableOpacity>
             ),
         });
-    }, [navigation]);
+    }, [navigation, generatedContent]);
 
     return (
         <KeyboardAvoidingView

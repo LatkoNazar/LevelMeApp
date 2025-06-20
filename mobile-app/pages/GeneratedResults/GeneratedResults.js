@@ -1,27 +1,27 @@
 ﻿import { View, ScrollView, StyleSheet } from "react-native";
 import OptionCard from "../../components/OptionCard";
-import ExercisesMusclesCategoryAssets from "../../assets/generated_objects/ExercisesMusclesCategoryAssets";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 
-const categories = ["all", "legs", "back", "chest", "arms", "neck", "abs"];
-
-export default function ShowExerciseCategories() {
+export default function GeneratedResults(props) {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { generatedContent } = route.params;
 
     return (
         <ScrollView style={styles.main}>
             <View style={styles.container}>
-                {categories.map((optionName) => (
+                {generatedContent.map((object) => (
                     <OptionCard
-                        key={optionName}
-                        optionName={optionName}
-                        img={ExercisesMusclesCategoryAssets[optionName].img}
-                        text={ExercisesMusclesCategoryAssets[optionName].text}
-                        withImage={true}
+                        key={object.date}
+                        optionName={object.date}
+                        text={object.date}
+                        withImage={false}
                         styles={styles.optionCardComponent}
                         handlePress={() =>
-                            navigation.navigate("Exercises List", {
-                                category: optionName,
+                            navigation.navigate("Generated Result", {
+                                title: object.date,
+                                content: object.content,
                             })
                         }
                     />
