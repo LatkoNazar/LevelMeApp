@@ -10,3 +10,12 @@ export async function getAllExercises(category, page = 1, per_page = 50) {
     const data = await response.json();
     return data;
 }
+
+export async function getGeneratedExercisesInfo() {
+    const response = await fetch(`${config.BACKEND_URL}/generated-exercises`);
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+}

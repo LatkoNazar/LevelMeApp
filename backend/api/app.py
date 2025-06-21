@@ -8,7 +8,7 @@ from api.db import setup_database
 from api.retrieve_exercises import router as exercises_router
 from chatbot.chatbot import router as chatbot_router
 from generators.vectorize import router as exercises_test_router
-
+from  api.generated_items_retrieval import router as generated_items_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_database()
@@ -23,6 +23,7 @@ def create_app() -> FastAPI:
     app.include_router(exercises_test_router)
     app.include_router(exercises_router)
     app.include_router(chatbot_router)
+    app.include_router(generated_items_router)
     return app
 
 app = create_app()

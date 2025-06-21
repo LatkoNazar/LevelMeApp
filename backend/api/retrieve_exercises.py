@@ -83,3 +83,5 @@ async def retrieve_all_exercises(
         "per_page": per_page,
         "total_count": total_count
     }
+
+

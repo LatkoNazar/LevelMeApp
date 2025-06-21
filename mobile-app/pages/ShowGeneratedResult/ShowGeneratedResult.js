@@ -29,11 +29,11 @@ export default function ShowGeneratedResult() {
                                 </AppText>
                                 {group.exercises.map((ex) => (
                                     <TouchableOpacity
-                                        key={`${group.name}-${ex}`}
+                                        key={`${group.name}-${ex.name}`}
                                         style={styles.exerciseContainer}
                                     >
                                         <AppText style={styles.exerciseText}>
-                                            {ex}
+                                            {ex.name}
                                         </AppText>
                                     </TouchableOpacity>
                                 ))}
