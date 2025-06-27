@@ -5,7 +5,7 @@ import json
 from chatbot.chat_memory import ChatMemory
 from typing import List, Dict
 from dotenv import load_dotenv
-from .rag_routes.workout_routing import extract_target_muscles, get_exercises,  ask_user_for_missing_info, extract_split_type
+from .rag_routes.workout_routing import extract_target_muscles, get_exercises
 from .chat_db_interaction.chat_chromaDB_interacrion import get_exercise_from_vercorDB
 import os
 
@@ -16,10 +16,10 @@ backend_base_url=os.getenv("BACKEND_URL")
 
 router = APIRouter(prefix="/chat")
 
-history = ChatMemory()
+chat_sessions: Dict[str, ChatMemory] = {}
 
-# Is not used now
-def prompt_format_for_model(model_name: str, history: List[Dict[str, str]]) -> str:
+# it is not used now
+def prompt_format_for_model(model_name: str, history: ChatMemory) -> str:
     if "openai" in model_name or "gpt" in model_name:
         return history
     elif "mistral" in model_name or "deepseek" in model_name:
@@ -32,7 +32,22 @@ def prompt_format_for_model(model_name: str, history: List[Dict[str, str]]) -> s
         return formatted
 
 
-async def detect_rag_data_type(prompt: str) -> str:
+async def update_answers_from_user(user_input: str, history: ChatMemory):
+    for question in history.get_pending_questions():
+        response = await call_chat([
+            {"role": "system", "content": (
+                f"Does the following user message answer this question?\n"
+                f"Question: {question}\n"
+                f"User message: {user_input}\n"
+                f"Respond with only 'yes' or 'no'."
+            )},
+            {"role": "user", "content": user_input}
+        ])
+        if response.strip().lower().startswith("yes"):
+            history.add_answer(question, user_input)
+
+
+async def detect_rag_data_type(prompt: str, history: ChatMemory) -> str:
     system_prompt = (
         "You are an assistant that analyzes user queries and decides whether private data should be used.\n"
         "There are three types of private data:\n"
@@ -66,7 +81,7 @@ async def detect_rag_data_type(prompt: str) -> str:
         return "none"
 
 
-async def default_chat(websocket: WebSocket):
+async def default_chat(websocket: WebSocket, prompt: str):
     # headers = {
     #     "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
     #     "Content-Type": "application/json",
@@ -77,7 +92,7 @@ async def default_chat(websocket: WebSocket):
     }
     payload = {
         "model": model,
-        "messages": history.get_trimmed_history(),
+        "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.7,
         "stream": True
     }
@@ -99,51 +114,57 @@ async def default_chat(websocket: WebSocket):
                         await websocket.send_json({"type": "message", "message": f"⚠️ Error parsing chunk: {e}"})
 
 
+async def process_workout_rag_type(websocket: WebSocket, prompt: str, history: ChatMemory):
+    if history.expecting_info():
+        await websocket.send_json({"type": "message", "message": "**I need a bit more info to create a complete plan:**\n"})
+        await websocket.send_json({"type": "message", "message": "\n".join([f"- {question}" for question in history.get_pending_questions()])})
+        return
 
-@router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket) -> None:
+    await websocket.send_json({"type": "message", "message" : "Retrieving relevant exercises from your private database... 🔍\n"})
+    muscles = await extract_target_muscles(prompt=prompt, history=history.get_trimmed_history())
+    await websocket.send_json({"type": "message", "message": f"Target muscles: {', '.join(muscles)}\n"})
+
+    exercises_json = await get_exercises(prompt=prompt, history=history, muscle_groups=muscles)
+    if isinstance(exercises_json, str):
+        exercises_json = json.loads(exercises_json)
+    exercises = await get_exercise_from_vercorDB(exercises_json=exercises_json)
+    if "error" in exercises:
+        print("error")
+    else:
+        await websocket.send_json({"type": "training_plan", "message": exercises})
+        await websocket.send_json({"type": "message", "message": "**Your program is ready** ✅"})
+    await websocket.send_json({"type": "done", "message": "[DONE]"})
+
+
+@router.websocket("/ws/{chat_id}")
+async def websocket_endpoint(websocket: WebSocket, chat_id: str) -> None:
     await websocket.accept()
+    if chat_id not in chat_sessions:
+        chat_sessions[chat_id] = ChatMemory()
+    history = chat_sessions[chat_id]
     try:
         data = await websocket.receive_json()
         prompt = data.get("prompt")
         history.add("user", prompt)
 
-        rag_type = await detect_rag_data_type(prompt=prompt)
+        rag_type = await detect_rag_data_type(prompt=prompt, history=history)
 
         match rag_type:
             case "workout":
-                questions_to_ask = await ask_user_for_missing_info(prompt=prompt, history=history.get_trimmed_history())
-                for line in questions_to_ask.strip().split("\n"):
-                    history.add("assistant", line.strip())
-                if "No questions to ask" not in questions_to_ask:
-                    await websocket.send_json({"type": "message", "message": "⚠️ I need a bit more info to create a complete plan:\n"})
-                    await websocket.send_json({"type": "message", "message": questions_to_ask})
-                    return
-                split = await extract_split_type(prompt, history.get_trimmed_history())
-                await websocket.send_json({"type": "message", "message" : "🔍 Retrieving relevant exercises from your private database...\n"})
-
-                muscles = await extract_target_muscles(prompt=prompt, history=history.get_trimmed_history())
-                await websocket.send_json({"type": "message", "message": f"🏋️‍♂️ Target muscles: {', '.join(muscles)}\n"})
-
-                exercises_json = await get_exercises(prompt=prompt, muscle_groups=muscles, training_split=split)
-                #print(json.dumps(exercises_json, indent=4))
-                if isinstance(exercises_json, str):
-                    exercises_json = json.loads(exercises_json)
-                exercises = await get_exercise_from_vercorDB(exercises_json=exercises_json)
-                print(json.dumps(exercises, indent=4))
-                if "error" in exercises:
-                    print("error")
-                else:
-                    await websocket.send_json({"type": "training_plan", "message": exercises})
-                    await websocket.send_json({"type": "message", "message": "Your program is ready ✅"})
-                await websocket.send_json({"type": "done", "message": "[DONE]"})
+                questions = ["which training split do you want to choose?", "which muscle groups don't you want to train?"]
+                for question in questions:
+                    history.add_question(question)
+                await update_answers_from_user(user_input=prompt, history=history)
+                print(history)
+                await process_workout_rag_type(websocket=websocket, prompt=prompt, history=history)
             case "none":
-                await default_chat(websocket)
+                await default_chat(websocket, prompt=prompt)
     except WebSocketDisconnect:
         print("Client disconnected")
 
 
-@router.post("/new-chat")
-async def new_chat() -> JSONResponse:
-    history.reset()
-    return JSONResponse(content={"message": "New chat started"})
+@router.post("/new-chat/{chat_id}")
+async def new_chat(chat_id: str) -> JSONResponse:
+    if chat_id in chat_sessions:
+        chat_sessions[chat_id].reset()
+    return JSONResponse(content={"message": f"New chat session {chat_id} started"})

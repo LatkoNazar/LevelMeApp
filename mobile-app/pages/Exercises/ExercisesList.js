@@ -9,12 +9,19 @@ import PropTypes from "prop-types";
 import ExerciseCard from "../../components/ExerciseCard.js";
 import { getAllExercises } from "../../api/exercisesRetrieval.js";
 
+import themes from "../../design/themes";
+import { useSelector } from "react-redux";
+
 export default function ExercisesList({ route }) {
     const [exercises, setExercises] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const { category } = route.params;
+
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
 
     useEffect(() => {
         fetchExercises(page);
@@ -57,7 +64,7 @@ export default function ExercisesList({ route }) {
             data={exercises}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderItem}
-            contentContainerStyle={styles.container}
+            contentContainerStyle={style.container}
             onEndReached={() => fetchExercises(page)}
             onEndReachedThreshold={0.5}
             ListFooterComponent={renderFooter}
@@ -65,11 +72,12 @@ export default function ExercisesList({ route }) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        padding: 10,
-        backgroundColor: "#526D82",
-    },
-});
+const styles = (theme) =>
+    StyleSheet.create({
+        container: {
+            padding: 10,
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+    });
 
 ExercisesList.propTypes = {};

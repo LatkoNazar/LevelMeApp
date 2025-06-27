@@ -10,9 +10,16 @@ import {
 import PropTypes from "prop-types";
 import AppText from "./AppText";
 
+import themes from "../design/themes";
+import { useSelector } from "react-redux";
+
 export default function AddTaskButton(props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [taskText, setTaskText] = useState("");
+
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
 
     function handleAdd() {
         if (taskText.trim()) {
@@ -32,9 +39,9 @@ export default function AddTaskButton(props) {
             </TouchableOpacity>
 
             <Modal transparent={true} visible={modalVisible}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <AppText style={styles.textModal}>
+                <View style={style.modalContainer}>
+                    <View style={style.modalContent}>
+                        <AppText style={style.textModal}>
                             Enter your task:
                         </AppText>
                         <TextInput
@@ -42,17 +49,17 @@ export default function AddTaskButton(props) {
                             placeholderTextColor="#27374D"
                             value={taskText}
                             onChangeText={setTaskText}
-                            style={styles.input}
+                            style={style.input}
                         />
-                        <View style={styles.buttonGroup}>
+                        <View style={style.buttonGroup}>
                             <TouchableOpacity
-                                style={styles.addButton}
+                                style={style.addButton}
                                 onPress={handleAdd}
                             >
                                 <AppText
                                     style={[
-                                        styles.buttonText.base,
-                                        styles.buttonText.add,
+                                        style.buttonText.base,
+                                        style.buttonText.add,
                                     ]}
                                 >
                                     Add
@@ -60,13 +67,13 @@ export default function AddTaskButton(props) {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={styles.cancelButton}
+                                style={style.cancelButton}
                                 onPress={() => setModalVisible(false)}
                             >
                                 <AppText
                                     style={[
-                                        styles.buttonText.base,
-                                        styles.buttonText.cancel,
+                                        style.buttonText.base,
+                                        style.buttonText.cancel,
                                     ]}
                                 >
                                     Cancel
@@ -85,52 +92,53 @@ AddTaskButton.propTypes = {
     style: PropTypes.object,
 };
 
-const styles = StyleSheet.create({
-    textModal: {
-        fontWeight: "bold",
-        color: "#27374D",
-    },
-    buttonWrapper: {
-        flex: 1,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#526D82",
-    },
+const styles = (theme) =>
+    StyleSheet.create({
+        textModal: {
+            fontWeight: "bold",
+            color: theme.AppTextColor,
+        },
+        buttonWrapper: {
+            flex: 1,
+        },
+        modalContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
 
-    modalContent: {
-        borderRadius: 10,
-        backgroundColor: "#9DB2BF",
-        padding: 20,
-        width: "80%",
-        alignItems: "center",
-    },
+        modalContent: {
+            borderRadius: 10,
+            backgroundColor: theme.AddTaskButtonModalContentBackgroundColor,
+            padding: 20,
+            width: "80%",
+            alignItems: "center",
+        },
 
-    input: {
-        marginTop: 5,
-        width: "100%",
-        padding: 10,
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 5,
-    },
+        input: {
+            marginTop: 5,
+            width: "100%",
+            padding: 10,
+            borderWidth: 1,
+            borderRadius: 5,
+            marginBottom: 5,
+        },
 
-    buttonGroup: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "100%",
-    },
-    buttonText: {
-        base: { fontWeight: "bold" },
-        add: { color: "blue" },
-        cancel: { color: "red" },
-    },
-    addButton: {
-        padding: 5,
-    },
-    cancelButton: {
-        padding: 5,
-    },
-});
+        buttonGroup: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+        },
+        buttonText: {
+            base: { fontWeight: "bold" },
+            add: { color: "blue" },
+            cancel: { color: "red" },
+        },
+        addButton: {
+            padding: 5,
+        },
+        cancelButton: {
+            padding: 5,
+        },
+    });

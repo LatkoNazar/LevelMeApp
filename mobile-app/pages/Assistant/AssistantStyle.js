@@ -1,56 +1,57 @@
 ﻿import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        backgroundColor: "#526D82",
-    },
-    input: {
-        flex: 1,
-        padding: 10,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderRadius: 10,
-        borderWidth: 1,
-        backgroundColor: "#9DB2BF",
-        margin: 15,
-        height: 50,
-        padding: 5,
-    },
-    scrollView: {
-        flex: 1,
-        padding: 15,
-    },
-    bubbleContainer: {
-        flexDirection: "row",
-    },
-    userMessage: {
-        alignSelf: "flex-end",
-        backgroundColor: "#DDE6ED",
-    },
-    botMessage: {
-        alignSelf: "flex-start",
-        backgroundColor: "#27374D",
-    },
-    bubble: {
-        borderRadius: 15,
-        padding: 10,
-        marginBottom: 5,
-    },
-    textUser: {
-        color: "#27374D",
-        fontFamily: "Arial",
-        fontSize: 16,
-    },
-    textBot: {
-        color: "#DDE6ED",
-        fontFamily: "Arial",
-        fontSize: 16,
-    },
-});
+export const styles = (theme) =>
+    StyleSheet.create({
+        main: {
+            flex: 1,
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+        input: {
+            flex: 1,
+            padding: 10,
+        },
+        inputContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderRadius: 10,
+            borderWidth: 1,
+            backgroundColor: theme.AssistantInputContainerColor,
+            margin: 15,
+            height: 50,
+            padding: 5,
+        },
+        scrollView: {
+            flex: 1,
+            padding: 15,
+        },
+        bubbleContainer: {
+            flexDirection: "row",
+        },
+        userMessage: {
+            alignSelf: "flex-end",
+            backgroundColor: theme.AssistantUserMessageBubbleColor,
+        },
+        botMessage: {
+            alignSelf: "flex-start",
+            backgroundColor: theme.AssistantBotMessageBubbleColor,
+        },
+        bubble: {
+            borderRadius: 15,
+            padding: 10,
+            marginBottom: 5,
+        },
+        textUser: {
+            color: theme.AssistantBotMessageTextColor,
+            fontFamily: "Arial",
+            fontSize: 16,
+        },
+        textBot: {
+            color: theme.AssistantBotMessageTexteColor,
+            fontFamily: "Arial",
+            fontSize: 16,
+        },
+    });
 
 export const getMarkdownStyles = (textColor) => ({
     body: {

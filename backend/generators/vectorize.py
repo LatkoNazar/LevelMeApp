@@ -1,10 +1,10 @@
 ﻿from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
-from api.db import get_db
+from api.db.db import get_db
 from sentence_transformers import SentenceTransformer
 import json
-from api.chroma_db import get_chroma_collection
+from api.db.chroma_db import get_chroma_collection
 
 router = APIRouter()
 model = SentenceTransformer("BAAI/bge-large-en-v1.5")

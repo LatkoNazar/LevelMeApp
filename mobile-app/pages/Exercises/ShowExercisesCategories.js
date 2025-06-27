@@ -3,25 +3,39 @@ import OptionCard from "../../components/OptionCard";
 import ExercisesMusclesCategoryAssets from "../../assets/generated_objects/ExercisesMusclesCategoryAssets";
 import { useNavigation } from "@react-navigation/native";
 
-const categories = ["all", "legs", "back", "chest", "arms", "neck", "abs"];
+import themes from "../../design/themes";
+import { useSelector } from "react-redux";
+
+import { exerciseCategories } from "./exerciseCategories";
 
 export default function ShowExerciseCategories() {
     const navigation = useNavigation();
 
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
+
     return (
-        <ScrollView style={styles.main}>
-            <View style={styles.container}>
-                {categories.map((optionName) => (
+        <ScrollView style={style.main}>
+            <View style={style.container}>
+                {exerciseCategories.map((optionObject) => (
                     <OptionCard
-                        key={optionName}
-                        optionName={optionName}
-                        img={ExercisesMusclesCategoryAssets[optionName].img}
-                        text={ExercisesMusclesCategoryAssets[optionName].text}
+                        key={optionObject.title}
+                        optionName={optionObject.title}
+                        img={
+                            ExercisesMusclesCategoryAssets[optionObject.title]
+                                .img
+                        }
+                        title={
+                            ExercisesMusclesCategoryAssets[optionObject.title]
+                                .text
+                        }
+                        description={optionObject.description}
                         withImage={true}
-                        styles={styles.optionCardComponent}
+                        styles={style.optionCardComponent}
                         handlePress={() =>
                             navigation.navigate("Exercises List", {
-                                category: optionName,
+                                category: optionObject.title,
                             })
                         }
                     />
@@ -31,13 +45,14 @@ export default function ShowExerciseCategories() {
     );
 }
 
-const styles = StyleSheet.create({
-    main: {
-        backgroundColor: "#526D82",
-    },
-    container: {
-        flex: 1,
-        flexDirection: "column",
-        alignItems: "center",
-    },
-});
+const styles = (theme) =>
+    StyleSheet.create({
+        main: {
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+        container: {
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+        },
+    });

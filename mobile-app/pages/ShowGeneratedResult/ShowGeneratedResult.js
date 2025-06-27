@@ -2,40 +2,47 @@
 import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useLayoutEffect } from "react";
 import AppText from "../../components/AppText";
+import { Ionicons } from "@expo/vector-icons";
+import ExpandableContainer from "../../components/ExpandableContainer";
+import ExerciseCard from "../../components/ExerciseCard";
+
+import themes from "../../design/themes";
+import { useSelector } from "react-redux";
 
 export default function ShowGeneratedResult() {
     const route = useRoute();
     const navigation = useNavigation();
     const { title, content } = route.params;
 
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: title,
         });
     }, [navigation, title]);
-
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={style.container}>
             <View>
                 {content.map((trainingDay) => (
-                    <View key={trainingDay.day} style={styles.dayBlock}>
-                        <AppText style={styles.dayTitle}>
+                    <View key={trainingDay.day} style={style.dayBlock}>
+                        <AppText style={style.dayTitle}>
                             {trainingDay.day}
                         </AppText>
                         {trainingDay.groups.map((group) => (
-                            <View key={group.name} style={styles.group}>
-                                <AppText style={styles.groupText}>
+                            <View key={group.name} style={style.group}>
+                                <AppText style={style.groupText}>
                                     {group.name} ({group.count})
                                 </AppText>
                                 {group.exercises.map((ex) => (
-                                    <TouchableOpacity
+                                    <ExpandableContainer
                                         key={`${group.name}-${ex.name}`}
-                                        style={styles.exerciseContainer}
+                                        title={ex.name}
                                     >
-                                        <AppText style={styles.exerciseText}>
-                                            {ex.name}
-                                        </AppText>
-                                    </TouchableOpacity>
+                                        <ExerciseCard item={ex} />
+                                    </ExpandableContainer>
                                 ))}
                             </View>
                         ))}
@@ -46,38 +53,33 @@ export default function ShowGeneratedResult() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "#526D82",
-        padding: 16,
-    },
-    dayBlock: {
-        marginBottom: 24,
-    },
-    dayTitle: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#DDE6ED",
-        marginBottom: 8,
-    },
-    group: {
-        marginBottom: 12,
-        paddingLeft: 10,
-    },
-    groupText: {
-        fontSize: 16,
-        fontWeight: "600",
-        color: "#F5F5F5",
-    },
-    exerciseText: {
-        fontSize: 14,
-        color: "#E0E0E0",
-        marginLeft: 10,
-    },
-    exerciseContainer: {
-        padding: 5,
-        backgroundColor: "#27374D",
-        borderRadius: 10,
-        marginVertical: 5,
-    },
-});
+const styles = (theme) =>
+    StyleSheet.create({
+        container: {
+            backgroundColor: theme.mainBackgroundContainerColor,
+            padding: 16,
+        },
+        dayBlock: {
+            marginBottom: 24,
+        },
+        dayTitle: {
+            fontSize: 20,
+            fontWeight: "bold",
+            color: theme.ShowGeneratedresultsTextColor,
+            marginBottom: 8,
+        },
+        group: {
+            marginBottom: 12,
+            paddingLeft: 10,
+        },
+        groupText: {
+            fontSize: 16,
+            fontWeight: "600",
+            color: theme.ShowGeneratedresultsTextColor,
+        },
+        exerciseText: {
+            fontSize: 14,
+            color: theme.ShowGeneratedresultsTextColor,
+            marginLeft: 10,
+        },
+    });

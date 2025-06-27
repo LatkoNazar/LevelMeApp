@@ -1,86 +1,77 @@
-import { StyleSheet } from "react-native";
+// REDUX
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
+// REACT HOOKS
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+// NAVIGATION
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomePage from "./pages/HomePage/HomePage";
-import DailyRoutine from "./pages/DailyRoutine/DailyRoutine";
-import CollectionStack from "./navigation/CollectionStack";
-import AssistantStack from "./navigation/AssistantStack";
-import { Ionicons } from "@expo/vector-icons";
-import { Image } from "react-native";
+const Stack = createNativeStackNavigator();
 
-const Tab = createBottomTabNavigator();
+// AUTH FUNCTIONS
+import { getUserToken } from "./pages/LoginAndSignUp/tokenOperations";
 
-export default function App() {
+// STACKS
+import MainTabsStack from "./navigation/MainTabsStack";
+import AuthStack from "./navigation/AuthStack";
+import { loginSuccess, logout, setToken } from "./redux/authSlice";
+
+export default function Root() {
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, size, color }) => {
-                        if (route.name === "Assistant") {
-                            const icon = focused
-                                ? require("./assets/icons/assistant_dark.png")
-                                : require("./assets/icons/assistant_light.png");
-                            return (
-                                <Image
-                                    source={icon}
-                                    style={{
-                                        width: size,
-                                        height: size,
-                                        tintColor: color,
-                                    }}
-                                    resizeMode="contain"
-                                />
-                            );
-                        } else {
-                            let iconName;
-
-                            if (route.name === "Home") {
-                                iconName = focused ? "home" : "home-outline";
-                            } else if (route.name === "Your Daily Tasks") {
-                                iconName = focused
-                                    ? "checkmark-circle"
-                                    : "checkmark-circle-outline";
-                            } else if (route.name === "Collection") {
-                                iconName = focused ? "star" : "star-outline";
-                            }
-                            return (
-                                <Ionicons
-                                    name={iconName}
-                                    size={size}
-                                    color={color}
-                                />
-                            );
-                        }
-                    },
-                    tabBarActiveTintColor: "#27374D",
-                    tabBarInactiveTintColor: "#27374D",
-                    tabBarStyle: {
-                        backgroundColor: "#9DB2BF",
-                    },
-                    headerStyle: {
-                        backgroundColor: "#9DB2BF",
-                    },
-                })}
-            >
-                <Tab.Screen name="Home" component={HomePage} />
-                <Tab.Screen name="Your Daily Tasks" component={DailyRoutine} />
-                <Tab.Screen
-                    name="Assistant"
-                    component={AssistantStack}
-                    options={{ headerShown: false }}
-                />
-                <Tab.Screen
-                    name="Collection"
-                    component={CollectionStack}
-                    options={{ headerShown: false }}
-                />
-            </Tab.Navigator>
-        </NavigationContainer>
+        <Provider store={store}>
+            <App />
+        </Provider>
     );
 }
 
-const styles = StyleSheet.create({
-    tab: {
-        backgroundColor: "#9DB2BF",
-    },
-});
+function App() {
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
+    useEffect(() => {
+        async function userToken() {
+            const token = await getUserToken();
+            dispatch(setToken(token ?? ""));
+            if (token) {
+                dispatch(loginSuccess());
+            } else {
+                dispatch(logout());
+            }
+            setCheckingAuth(false);
+        }
+        userToken();
+    }, [dispatch]);
+
+    if (checkingAuth) return null;
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: "#9DB2BF",
+                    },
+                    headerTintColor: "#27374D",
+                }}
+            >
+                {isAuthenticated ? (
+                    <Stack.Screen
+                        name="App"
+                        component={MainTabsStack}
+                        options={{ headerShown: false }}
+                    />
+                ) : (
+                    <Stack.Screen
+                        name="SignUp & Login"
+                        component={AuthStack}
+                        options={{ headerShown: false }}
+                    />
+                )}
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}

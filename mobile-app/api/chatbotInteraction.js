@@ -1,7 +1,23 @@
-﻿import config from "../config";
+﻿import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export function getAnswerWS(prompt, onData, onDone, onError, addContent) {
-    const socket = new WebSocket(`${config.WEBSOCKET_URL}/chat/ws`);
+import { config } from "../config";
+
+export function generateId() {
+    return Date.now().toString() + Math.random().toString(36).slice(2, 6);
+}
+
+async function getOrCreateChatId() {
+    let chatId = await AsyncStorage.getItem("chatId");
+    if (!chatId) {
+        chatId = generateId();
+        await AsyncStorage.setItem("chatId", chatId);
+    }
+    return chatId;
+}
+
+export async function getAnswerWS(prompt, onData, onDone, onError, addContent) {
+    const chatId = await getOrCreateChatId();
+    const socket = new WebSocket(`${config.WEBSOCKET_URL}/chat/ws/${chatId}`);
 
     socket.onopen = () => {
         socket.send(JSON.stringify({ prompt }));
@@ -26,4 +42,16 @@ export function getAnswerWS(prompt, onData, onDone, onError, addContent) {
     };
 
     return socket;
+}
+
+export async function handleNewChat() {
+    const chatId = await getOrCreateChatId();
+    try {
+        await fetch(`${config.BACKEND_URL}/chat/new-chat/${chatId}`, {
+            method: "POST",
+        });
+        return chatId;
+    } catch (error) {
+        console.error("New session is not created successfully:", error);
+    }
 }

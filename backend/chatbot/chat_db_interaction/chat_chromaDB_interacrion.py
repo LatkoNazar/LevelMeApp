@@ -39,7 +39,6 @@ async def get_exercise_from_vercorDB(exercises_json):
 
                 updated_day["groups"].append(updated_group)
             result.append(updated_day)
-        print(json.dumps(result, indent=4, ensure_ascii=False))
         return result
     except Exception as e:
         return {"error": e}

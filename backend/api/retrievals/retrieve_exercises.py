@@ -1,7 +1,7 @@
 ﻿from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
-from api.db import get_db
+from api.db.db import get_db
 from typing import List, Dict
 
 router = APIRouter()

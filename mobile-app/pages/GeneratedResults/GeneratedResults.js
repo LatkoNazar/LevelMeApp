@@ -4,21 +4,28 @@ import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import config from "../../config.js";
 
+import themes from "../../design/themes.js";
+import { useSelector } from "react-redux";
+
 export default function GeneratedResults(props) {
     const navigation = useNavigation();
     const route = useRoute();
     const { generatedContent } = route.params;
 
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
+
     return (
-        <ScrollView style={styles.main}>
-            <View style={styles.container}>
+        <ScrollView style={style.main}>
+            <View style={style.container}>
                 {generatedContent.map((object) => (
                     <OptionCard
                         key={object.date}
                         optionName={object.date}
                         text={object.date}
                         withImage={false}
-                        styles={styles.optionCardComponent}
+                        styles={style.optionCardComponent}
                         handlePress={async () => {
                             try {
                                 const response = await fetch(
@@ -51,13 +58,14 @@ export default function GeneratedResults(props) {
     );
 }
 
-const styles = StyleSheet.create({
-    main: {
-        backgroundColor: "#526D82",
-    },
-    container: {
-        flex: 1,
-        flexDirection: "column",
-        alignItems: "center",
-    },
-});
+const styles = (theme) =>
+    StyleSheet.create({
+        main: {
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+        container: {
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+        },
+    });

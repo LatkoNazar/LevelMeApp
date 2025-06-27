@@ -5,8 +5,15 @@ import AddTaskButton from "../../components/AddTaskButton.js";
 import ClearTasks from "../../components/ClearTasks.js";
 import AppText from "../../components/AppText.js";
 
+import themes from "../../design/themes.js";
+import { useSelector } from "react-redux";
+
 export default function DailyRoutine() {
     const [tasks, setTasks] = useState([]);
+
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
 
     function handleAddTask(newTask) {
         setTasks((prev) => [
@@ -42,17 +49,18 @@ export default function DailyRoutine() {
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     }
 
-    const uncompletedTasks = tasks.filter((task) => !task.completed);
+    const pendingTasks = tasks.filter((task) => !task.completed);
     const completedTasks = tasks.filter((task) => task.completed);
 
     return (
-        <View style={styles.main}>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                <View style={styles.taskSection}>
-                    <AppText style={styles.sectionHeader}>Uncompleted:</AppText>
-                    {uncompletedTasks.length > 0 ? (
+        <View style={style.main}>
+            <View></View>
+            <ScrollView contentContainerStyle={style.scrollContent}>
+                <View style={style.taskSection}>
+                    <AppText style={style.sectionHeader}>Pending:</AppText>
+                    {pendingTasks.length > 0 ? (
                         <FlatList
-                            data={uncompletedTasks}
+                            data={pendingTasks}
                             keyExtractor={(item) => item.id}
                             renderItem={({ item }) => (
                                 <TaskToDo
@@ -65,12 +73,12 @@ export default function DailyRoutine() {
                             scrollEnabled={false}
                         />
                     ) : (
-                        <AppText style={styles.emptyText}>No tasks</AppText>
+                        <AppText style={style.emptyText}>No tasks</AppText>
                     )}
                 </View>
 
-                <View style={styles.taskSection}>
-                    <AppText style={styles.sectionHeader}>Completed:</AppText>
+                <View style={style.taskSection}>
+                    <AppText style={style.sectionHeader}>Completed:</AppText>
                     {completedTasks.length > 0 ? (
                         <FlatList
                             data={completedTasks}
@@ -85,63 +93,64 @@ export default function DailyRoutine() {
                             scrollEnabled={false}
                         />
                     ) : (
-                        <AppText style={styles.emptyText}>
-                            No uncompleted tasks
+                        <AppText style={style.emptyText}>
+                            No pending tasks
                         </AppText>
                     )}
                 </View>
             </ScrollView>
 
-            <View style={styles.buttons}>
+            <View style={style.buttons}>
                 <AddTaskButton
                     onAddTask={handleAddTask}
-                    style={styles.customButton}
+                    style={style.customButton}
                 />
                 <ClearTasks
                     onClearTask={handleClearList}
-                    style={styles.customButton}
+                    style={style.customButton}
                 />
             </View>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        padding: 10,
-        backgroundColor: "#526D82",
-    },
-    scrollContent: {
-        padding: 10,
-    },
-    taskSection: {
-        marginBottom: 20,
-    },
-    sectionHeader: {
-        fontSize: 25,
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    emptyText: {
-        fontStyle: "italic",
-        color: "#27374D",
-    },
-    buttons: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 15,
-        justifyContent: "space-between",
-        gap: 15,
-    },
-    customButton: {
-        flex: 1,
-        borderWidth: 1,
-        backgroundColor: "#9DB2BF",
-        paddingVertical: 12,
-        paddingHorizontal: 15,
-        borderRadius: 10,
-        alignItems: "center",
-        gap: 10,
-    },
-});
+const styles = (theme) =>
+    StyleSheet.create({
+        main: {
+            flex: 1,
+            padding: 10,
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+        scrollContent: {
+            padding: 10,
+        },
+        taskSection: {
+            marginBottom: 20,
+        },
+        sectionHeader: {
+            fontSize: 25,
+            fontWeight: "bold",
+            marginBottom: 10,
+        },
+        emptyText: {
+            fontStyle: "italic",
+            color: theme.AppTextColor,
+        },
+        buttons: {
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 15,
+            justifyContent: "space-between",
+            gap: 15,
+        },
+        customButton: {
+            flex: 1,
+            borderWidth: 1,
+            backgroundColor: theme.DailyRoutineButtonsColor,
+            paddingVertical: 12,
+            paddingHorizontal: 15,
+            borderRadius: 10,
+            alignItems: "center",
+            gap: 10,
+        },
+    });

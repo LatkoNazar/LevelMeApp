@@ -1,25 +1,35 @@
-﻿import { View, Text, ScrollView, StyleSheet } from "react-native";
+﻿import { View, ScrollView, StyleSheet } from "react-native";
 import OptionCard from "../../components/OptionCard";
 import CollectionOptionsAssets from "../../assets/generated_objects/CollectionOptionsAssets";
 import { useNavigation } from "@react-navigation/native";
 
-const options = ["Exercises", "Nutrition"];
+import themes from "../../design/themes";
+import { useSelector } from "react-redux";
+
+import { collectionOptions } from "./collectionOptions";
 
 export default function MyPath() {
     const navigation = useNavigation();
 
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
+
     return (
-        <ScrollView style={styles.main}>
-            <View style={styles.container}>
-                {options.map((optionName) => (
+        <ScrollView style={style.main}>
+            <View style={style.container}>
+                {collectionOptions.map((optionObject) => (
                     <OptionCard
-                        key={optionName}
-                        optionName={optionName}
-                        img={CollectionOptionsAssets[optionName].img}
-                        text={CollectionOptionsAssets[optionName].text}
+                        key={optionObject.title}
+                        optionName={optionObject.title}
+                        img={CollectionOptionsAssets[optionObject.title].img}
+                        title={CollectionOptionsAssets[optionObject.title].text}
+                        description={optionObject.description}
                         withImage={true}
-                        styles={styles.optionCardComponent}
-                        handlePress={() => navigation.navigate(optionName)}
+                        styles={style.optionCardComponent}
+                        handlePress={() =>
+                            navigation.navigate(optionObject.title)
+                        }
                     />
                 ))}
             </View>
@@ -27,13 +37,14 @@ export default function MyPath() {
     );
 }
 
-const styles = StyleSheet.create({
-    main: {
-        backgroundColor: "#526D82",
-    },
-    container: {
-        flex: 1,
-        flexDirection: "column",
-        alignItems: "center",
-    },
-});
+const styles = (theme) =>
+    StyleSheet.create({
+        main: {
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+        container: {
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+        },
+    });

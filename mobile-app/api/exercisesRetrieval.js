@@ -1,4 +1,4 @@
-﻿import config from "../config.js";
+﻿import { config } from "../config.js";
 
 export async function getAllExercises(category, page = 1, per_page = 50) {
     const response = await fetch(

@@ -1,7 +1,7 @@
 ﻿import json
 from pathlib import Path
 
-from backend.api.app import app, db
+from api.app import app, db
 
 def init_db_and_import_data() -> None:
     with app.app_context():

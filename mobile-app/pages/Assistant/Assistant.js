@@ -17,17 +17,25 @@ import {
 } from "react-native";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { getAnswerWS } from "../../api/chatbotInteraction";
+import { getAnswerWS, handleNewChat } from "../../api/chatbotInteraction";
 import { getMarkdownStyles, styles } from "./AssistantStyle";
 import config from "../../config";
 import IconCounter from "../../components/IconCounter";
 import { useNavigation } from "@react-navigation/native";
 
+import { useSelector } from "react-redux";
+import themes from "../../design/themes";
+
 const MessageBubble = ({ text, isUser, style }) => {
-    const textStyle = isUser ? styles.textUser : styles.textBot;
     const textColor = isUser ? "#27374D" : "#DDE6ED";
+
     return (
-        <View style={[styles.bubble, style]}>
+        <View
+            style={[
+                style.bubble,
+                isUser ? style.userMessage : style.botMessage,
+            ]}
+        >
             <Markdown style={getMarkdownStyles(textColor)}>{text}</Markdown>
         </View>
     );
@@ -44,21 +52,19 @@ export default function Assistant() {
     const [messagesList, setMessagesList] = useState([]);
     const [generatedContent, setGeneratedContent] = useState([]);
 
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
+
     function handleInputChange(text) {
         setInputText(text);
     }
 
-    async function handleNewChat() {
+    const handleResetChat = async () => {
+        await handleNewChat();
         setInputText("");
         setMessagesList([]);
-        try {
-            await fetch(`${config.BACKEND_URL}/chat/new-chat`, {
-                method: "POST",
-            });
-        } catch (error) {
-            console.error("New session is not created successfully:", error);
-        }
-    }
+    };
 
     const handleSubmit = () => {
         const userId = generateId();
@@ -140,7 +146,7 @@ export default function Assistant() {
             ),
             headerRight: () => (
                 <TouchableOpacity
-                    onPress={() => handleNewChat()}
+                    onPress={() => handleResetChat()}
                     style={{ marginRight: 20 }}
                 >
                     <AppText
@@ -163,19 +169,15 @@ export default function Assistant() {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={headerHeight}
         >
-            <View style={styles.main}>
+            <View style={style.main}>
                 <ScrollView
-                    style={styles.scrollView}
-                    contentContainerStyle={[styles.scrollViewContent]}
+                    style={style.scrollView}
+                    contentContainerStyle={[style.scrollViewContent]}
                     keyboardShouldPersistTaps="handled"
                 >
                     {messagesList.map((message) => (
                         <MessageBubble
-                            style={
-                                message.isUser
-                                    ? styles.userMessage
-                                    : styles.botMessage
-                            }
+                            style={style}
                             key={message.id}
                             text={message.text}
                             isUser={message.isUser}
@@ -183,14 +185,14 @@ export default function Assistant() {
                     ))}
                 </ScrollView>
                 <View style={{ borderTopWidth: 1 }}>
-                    <View style={styles.inputContainer}>
+                    <View style={style.inputContainer}>
                         <TextInput
                             placeholder="Enter text:"
                             placeholderTextColor={"#27374D"}
                             onChangeText={handleInputChange}
                             keyboardAppearance="dark"
                             value={inputText}
-                            style={styles.input}
+                            style={style.input}
                         />
                         <TouchableOpacity
                             onPress={handleSubmit}

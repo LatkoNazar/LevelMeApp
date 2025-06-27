@@ -25,5 +25,5 @@ async def call_chat(messages: List[Dict], temperature: float = 0.0) -> str:
             result = response.json()
             return result["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        print(f"❌ DeepSeek error: {e}")
+        print(f"❌ Chatbot error: {e}")
         return "[ERROR]"
