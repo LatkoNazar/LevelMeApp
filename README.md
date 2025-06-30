@@ -5,3 +5,5 @@ This project uses the [corbt/all-recipes](https://huggingface.co/datasets/corbt/
 Licensed under the Apache License 2.0.
 See the license here: http://www.apache.org/licenses/LICENSE-2.0
 Modifications: cleaned data, removed duplicates, added custom fields for nutritional values.
+
+## Backgrounds by SVGBackgrounds.com
