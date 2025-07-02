@@ -6,4 +6,5 @@ Licensed under the Apache License 2.0.
 See the license here: http://www.apache.org/licenses/LICENSE-2.0
 Modifications: cleaned data, removed duplicates, added custom fields for nutritional values.
 
-## Backgrounds by SVGBackgrounds.com
+### Backgrounds by SVGBackgrounds.com
+### Free SVG Background by <a target="_blank" href="https://bgjar.com">BGJar</a>
