@@ -7,6 +7,7 @@ import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 import { exerciseCategories } from "./exerciseCategories";
+import Schema from "../../design/backgrounds/Schema";
 
 export default function ShowExerciseCategories() {
     const navigation = useNavigation();
@@ -16,40 +17,42 @@ export default function ShowExerciseCategories() {
     const style = styles(theme);
 
     return (
-        <ScrollView style={style.main}>
-            <View style={style.container}>
-                {exerciseCategories.map((optionObject) => (
-                    <OptionCard
-                        key={optionObject.title}
-                        optionName={optionObject.title}
-                        img={
-                            ExercisesMusclesCategoryAssets[optionObject.title]
-                                .img
-                        }
-                        title={
-                            ExercisesMusclesCategoryAssets[optionObject.title]
-                                .text
-                        }
-                        description={optionObject.description}
-                        withImage={true}
-                        styles={style.optionCardComponent}
-                        handlePress={() =>
-                            navigation.navigate("Exercises List", {
-                                category: optionObject.title,
-                            })
-                        }
-                    />
-                ))}
-            </View>
-        </ScrollView>
+        <>
+            <Schema />
+            <ScrollView style={style.main}>
+                <View style={style.container}>
+                    {exerciseCategories.map((optionObject) => (
+                        <OptionCard
+                            key={optionObject.title}
+                            optionName={optionObject.title}
+                            img={
+                                ExercisesMusclesCategoryAssets[
+                                    optionObject.title
+                                ].img
+                            }
+                            title={
+                                ExercisesMusclesCategoryAssets[
+                                    optionObject.title
+                                ].text
+                            }
+                            description={optionObject.description}
+                            withImage={true}
+                            styles={style.optionCardComponent}
+                            handlePress={() =>
+                                navigation.navigate("Exercises List", {
+                                    category: optionObject.title,
+                                })
+                            }
+                        />
+                    ))}
+                </View>
+            </ScrollView>
+        </>
     );
 }
 
 const styles = (theme) =>
     StyleSheet.create({
-        main: {
-            backgroundColor: theme.mainBackgroundContainerColor,
-        },
         container: {
             flex: 1,
             flexDirection: "column",

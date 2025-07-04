@@ -1,8 +1,7 @@
 ﻿import { Text, View, StyleSheet } from "react-native";
 import AppText from "../../components/AppText";
-
-import themes from "../../design/themes";
 import { useSelector } from "react-redux";
+import themes from "../../design/themes";
 
 export default function HomePage() {
     const currentThemeName = useSelector((state) => state.theme.mode);
@@ -10,9 +9,7 @@ export default function HomePage() {
     const style = styles(theme);
     return (
         <View style={style.main}>
-            <View style={style.main}>
-                <AppText>Home Page</AppText>
-            </View>
+            <AppText>Home Page</AppText>
         </View>
     );
 }
@@ -20,9 +17,9 @@ export default function HomePage() {
 const styles = (theme) =>
     StyleSheet.create({
         main: {
-            backgroundColor: theme.mainBackgroundContainerColor,
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
+            backgroundColor: theme.mainBackgroundContainerColor,
         },
     });

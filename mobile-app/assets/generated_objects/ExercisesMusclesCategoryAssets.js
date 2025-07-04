@@ -1,30 +1,30 @@
 ﻿const ExercisesMusclesCategoryAssets = {
     legs: {
-        img: require("../ExercisesOptionsImages/legs.jpg"),
+        img: require("../Images/ExercisesOptionsImages/legs.jpg"),
         text: "Legs",
     },
     abs: {
-        img: require("../ExercisesOptionsImages/abs.jpg"),
+        img: require("../Images/ExercisesOptionsImages/abs.jpg"),
         text: "Abs",
     },
     arms: {
-        img: require("../ExercisesOptionsImages/arms.jpg"),
+        img: require("../Images/ExercisesOptionsImages/arms.jpg"),
         text: "Arms",
     },
     chest: {
-        img: require("../ExercisesOptionsImages/chest.jpg"),
+        img: require("../Images/ExercisesOptionsImages/chest.jpg"),
         text: "Chest",
     },
     back: {
-        img: require("../ExercisesOptionsImages/back.jpg"),
+        img: require("../Images/ExercisesOptionsImages/back.jpg"),
         text: "Back",
     },
     neck: {
-        img: require("../ExercisesOptionsImages/neck.jpg"),
+        img: require("../Images/ExercisesOptionsImages/neck.jpg"),
         text: "Neck",
     },
     all: {
-        img: require("../ExercisesOptionsImages/perfect_body.jpg"),
+        img: require("../Images/ExercisesOptionsImages/perfect_body.jpg"),
         text: "All",
     },
 };

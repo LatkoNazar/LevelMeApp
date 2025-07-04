@@ -4,7 +4,6 @@ import httpx
 from typing import Dict, List
 from chatbot.chat_utils import call_chat
 
-
 key_muscles = {
     "legs": ["adductors", "hamstrings", "glutes", "abductors", "calves", "quadriceps"],
     "back": ["middle back", "traps", "lats", "lower back"],

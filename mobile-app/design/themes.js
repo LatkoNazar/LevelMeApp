@@ -1,4 +1,6 @@
-﻿export default {
+﻿import ShowGeneratedResult from "../pages/ShowGeneratedResult/ShowGeneratedResult";
+
+export default {
     standard: {
         AppTextColor: "#27374D",
 
@@ -25,6 +27,10 @@
         ExpandableContainerContentBackgroundColor: "#9DB2BF",
 
         ShowGeneratedresultsTextColor: "#DDE6ED",
+        ShowGeneratedresultsOptionBackgroundColor: "#9DB2BF",
+
+        ShowGeneratedresultTextColor: "#F6F1F1",
+        ShowGeneratedResultBackgroundColor: "#526D82",
 
         ExerciseCardBackgroundColor: "#f9f9f9",
         ExerciseCardBorderColor: "black",
@@ -39,5 +45,16 @@
         SignUpANDLoginSwitchTextColor: "black",
 
         SettingsLogOutButtonTextColor: "#9DB2BF",
+
+        ProfileButtonBackgroundColor: "#9DB2BF",
+        ProfileUserDataColor: "#F6F1F1",
+
+        GenerateTrainingProgramButtonActive: "#526D82",
+        GenerateTrainingProgramButtonNotActive: "#9DB2BF",
+        GenerateTrainingProgramDetailTitle: "#9DB2BF",
+
+        GenerateNutritionPlanInputBackgroundColor: "#9DB2BF",
+        GenerateNutritionPlanButtonActive: "#526D82",
+        GenerateNutritionPlanButtonNotActive: "#9DB2BF",
     },
 };

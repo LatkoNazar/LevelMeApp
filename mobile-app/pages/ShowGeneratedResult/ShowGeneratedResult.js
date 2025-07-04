@@ -7,13 +7,17 @@ import ExpandableContainer from "../../components/ExpandableContainer";
 import ExerciseCard from "../../components/ExerciseCard";
 
 import themes from "../../design/themes";
+import { config } from "../../config";
 import { useSelector } from "react-redux";
 
-export default function ShowGeneratedResult() {
+import Schema from "../../design/backgrounds/Schema";
+
+export default function ShowGeneratedResult(props) {
+    const token = useSelector((state) => state.auth.token);
     const route = useRoute();
     const navigation = useNavigation();
-    const { title, content } = route.params;
-
+    const { title, content, saveOpt } = route.params;
+    console.log(title, content, saveOpt);
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
@@ -23,63 +27,122 @@ export default function ShowGeneratedResult() {
             title: title,
         });
     }, [navigation, title]);
+
+    async function handleSavePlan() {
+        fetch(`${config.BACKEND_URL}/chatbot/generated-plan/save-plan`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ title: title, plan: content }),
+        });
+    }
+
     return (
-        <ScrollView style={style.container}>
-            <View>
-                {content.map((trainingDay) => (
-                    <View key={trainingDay.day} style={style.dayBlock}>
-                        <AppText style={style.dayTitle}>
-                            {trainingDay.day}
-                        </AppText>
-                        {trainingDay.groups.map((group) => (
-                            <View key={group.name} style={style.group}>
-                                <AppText style={style.groupText}>
-                                    {group.name} ({group.count})
-                                </AppText>
-                                {group.exercises.map((ex) => (
-                                    <ExpandableContainer
-                                        key={`${group.name}-${ex.name}`}
-                                        title={ex.name}
-                                    >
-                                        <ExerciseCard item={ex} />
-                                    </ExpandableContainer>
-                                ))}
-                            </View>
-                        ))}
-                    </View>
-                ))}
-            </View>
-        </ScrollView>
+        <>
+            <Schema />
+            <ScrollView style={style.container}>
+                <View>
+                    {content.map((trainingDay, dayIndex) => (
+                        <View
+                            key={`${trainingDay.day}-${dayIndex}`}
+                            style={style.dayBlock}
+                        >
+                            <AppText style={style.dayTitle}>
+                                {trainingDay.day}
+                            </AppText>
+                            {trainingDay.groups.map((group) => (
+                                <View key={group.name} style={style.group}>
+                                    <View style={style.groupHeader}>
+                                        <AppText style={style.groupText}>
+                                            {group.name} ({group.count})
+                                        </AppText>
+                                    </View>
+                                    {group.exercises.map((ex, exIndex) => (
+                                        <ExpandableContainer
+                                            key={`ex-${group.name}-${ex.name}-${exIndex}`}
+                                            title={ex.name}
+                                        >
+                                            <ExerciseCard item={ex} />
+                                        </ExpandableContainer>
+                                    ))}
+                                </View>
+                            ))}
+                        </View>
+                    ))}
+                </View>
+                {saveOpt && (
+                    <TouchableOpacity
+                        style={style.saveButton}
+                        onPress={handleSavePlan}
+                    >
+                        <AppText>Save Plan</AppText>
+                    </TouchableOpacity>
+                )}
+            </ScrollView>
+        </>
     );
 }
 
 const styles = (theme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: theme.mainBackgroundContainerColor,
+            backgroundColor: "transparent",
             padding: 16,
         },
         dayBlock: {
+            backgroundColor: theme.ShowGeneratedResultBackgroundColor,
+            borderRadius: 14,
+            padding: 16,
             marginBottom: 24,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 6,
+            elevation: 3,
+            borderColor: "white",
+            borderWidth: 1,
         },
         dayTitle: {
-            fontSize: 20,
-            fontWeight: "bold",
-            color: theme.ShowGeneratedresultsTextColor,
-            marginBottom: 8,
+            fontSize: 22,
+            fontWeight: "700",
+            color: theme.ShowGeneratedresultTextColor,
+            marginBottom: 12,
         },
         group: {
-            marginBottom: 12,
-            paddingLeft: 10,
+            marginBottom: 16,
+        },
+        groupHeader: {
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#2a2a2a",
+            borderRadius: 20,
+            paddingVertical: 6,
+            paddingHorizontal: 12,
+            alignSelf: "flex-start",
+            marginBottom: 10,
         },
         groupText: {
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: "600",
-            color: theme.ShowGeneratedresultsTextColor,
+            color: "#fff",
         },
         exerciseText: {
             fontSize: 14,
             color: theme.ShowGeneratedresultsTextColor,
             marginLeft: 10,
+        },
+        saveButton: {
+            backgroundColor: "lightblue",
+            padding: 16,
+            borderRadius: 14,
+            alignItems: "center",
+            marginBottom: 20,
+            shadowColor: "#34C759",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.2,
+            shadowRadius: 6,
+            elevation: 3,
         },
     });

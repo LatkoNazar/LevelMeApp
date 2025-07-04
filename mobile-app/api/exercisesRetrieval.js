@@ -2,7 +2,7 @@
 
 export async function getAllExercises(category, page = 1, per_page = 50) {
     const response = await fetch(
-        `${config.BACKEND_URL}/${category}-exercises?page=${page}&per_page=${per_page}`
+        `${config.BACKEND_URL}/collection/${category}-exercises?page=${page}&per_page=${per_page}`
     );
     if (!response.ok) {
         throw new Error("Network response was not ok");

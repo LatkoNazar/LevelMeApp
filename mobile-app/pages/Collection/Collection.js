@@ -7,8 +7,9 @@ import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 import { collectionOptions } from "./collectionOptions";
+import Schema from "../../design/backgrounds/Schema";
 
-export default function MyPath() {
+export default function Collection() {
     const navigation = useNavigation();
 
     const currentThemeName = useSelector((state) => state.theme.mode);
@@ -16,31 +17,38 @@ export default function MyPath() {
     const style = styles(theme);
 
     return (
-        <ScrollView style={style.main}>
-            <View style={style.container}>
-                {collectionOptions.map((optionObject) => (
-                    <OptionCard
-                        key={optionObject.title}
-                        optionName={optionObject.title}
-                        img={CollectionOptionsAssets[optionObject.title].img}
-                        title={CollectionOptionsAssets[optionObject.title].text}
-                        description={optionObject.description}
-                        withImage={true}
-                        styles={style.optionCardComponent}
-                        handlePress={() =>
-                            navigation.navigate(optionObject.title)
-                        }
-                    />
-                ))}
-            </View>
-        </ScrollView>
+        <>
+            <Schema />
+            <ScrollView style={style.main}>
+                <View style={style.container}>
+                    {collectionOptions.map((optionObject) => (
+                        <OptionCard
+                            key={optionObject.title}
+                            optionName={optionObject.title}
+                            img={
+                                CollectionOptionsAssets[optionObject.title].img
+                            }
+                            title={
+                                CollectionOptionsAssets[optionObject.title].text
+                            }
+                            description={optionObject.description}
+                            withImage={true}
+                            styles={style.optionCardComponent}
+                            handlePress={() =>
+                                navigation.navigate(optionObject.title)
+                            }
+                        />
+                    ))}
+                </View>
+            </ScrollView>
+        </>
     );
 }
 
 const styles = (theme) =>
     StyleSheet.create({
         main: {
-            backgroundColor: theme.mainBackgroundContainerColor,
+            backgroundColor: "transparent",
         },
         container: {
             flex: 1,

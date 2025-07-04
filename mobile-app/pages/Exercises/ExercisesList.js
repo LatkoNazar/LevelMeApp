@@ -4,11 +4,12 @@ import {
     StyleSheet,
     TouchableOpacity,
     ActivityIndicator,
+    View,
 } from "react-native";
 import PropTypes from "prop-types";
 import ExerciseCard from "../../components/ExerciseCard.js";
 import { getAllExercises } from "../../api/exercisesRetrieval.js";
-
+import Schema from "../../design/backgrounds/Schema.js";
 import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
@@ -60,15 +61,18 @@ export default function ExercisesList({ route }) {
         ) : null;
 
     return (
-        <FlatList
-            data={exercises}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            contentContainerStyle={style.container}
-            onEndReached={() => fetchExercises(page)}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={renderFooter}
-        />
+        <View style={{ flex: 1 }}>
+            <Schema />
+            <FlatList
+                data={exercises}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                contentContainerStyle={style.container}
+                onEndReached={() => fetchExercises(page)}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={renderFooter}
+            />
+        </View>
     );
 }
 
@@ -76,7 +80,6 @@ const styles = (theme) =>
     StyleSheet.create({
         container: {
             padding: 10,
-            backgroundColor: theme.mainBackgroundContainerColor,
         },
     });
 

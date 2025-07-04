@@ -1,0 +1,79 @@
+﻿import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { config } from "../../config.js";
+import AppText from "../../components/AppText.js";
+import themes from "../../design/themes.js";
+import { useSelector } from "react-redux";
+
+export default function GeneratedContent(props) {
+    const navigation = useNavigation();
+    const route = useRoute();
+    const { generatedContent } = route.params || {};
+    const token = useSelector((state) => state.auth.token);
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
+    const style = styles(theme);
+
+    async function getGeneratedContent(id) {
+        try {
+            const response = await fetch(
+                `${config.BACKEND_URL}/user-data/generated-content/get-content`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id: id }),
+                }
+            );
+            const content = await response.json();
+            return content;
+        } catch (error) {
+            console.error("Error sending generated exercises:", error);
+        }
+    }
+
+    return (
+        <ScrollView style={style.main}>
+            <View style={style.container}>
+                {generatedContent.map((item) => (
+                    <TouchableOpacity
+                        key={item.id}
+                        style={style.optionCardComponent}
+                        onPress={async () => {
+                            const content = await getGeneratedContent(item.id);
+                            navigation.navigate("Your Generated Result", {
+                                saveOpt: false,
+                                title: item.title,
+                                content: content["plan"],
+                            });
+                        }}
+                    >
+                        <AppText style={{ fontWeight: "bold" }}>
+                            {item.title}
+                        </AppText>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        </ScrollView>
+    );
+}
+
+const styles = (theme) =>
+    StyleSheet.create({
+        main: {
+            backgroundColor: theme.mainBackgroundContainerColor,
+        },
+        container: {
+            flex: 1,
+            flexDirection: "column",
+        },
+        optionCardComponent: {
+            backgroundColor: theme.ShowGeneratedresultsOptionBackgroundColor,
+            padding: 10,
+            borderRadius: 15,
+            alignItems: "center",
+            margin: 10,
+        },
+    });

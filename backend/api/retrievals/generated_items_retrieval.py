@@ -1,12 +1,20 @@
 ﻿from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from api.db.db import get_db
 from typing import List, Dict
 import json
-router = APIRouter()
+import jwt
+import os
 
-async def get_exercise_from_DB(exercise_id: str, db: AsyncSession):
+from ORM.training_plans import TrainingPlans
+from schemas.training_plan_schema import TrainingPlanSchema
+from api.utils.token_utils import get_token
+
+router = APIRouter(prefix="/chatbot/generated-plan")
+
+async def get_exercise_from_db(exercise_id: str, db: AsyncSession):
     try:
         query = text("""
             SELECT
@@ -42,7 +50,7 @@ async def get_exercise_from_DB(exercise_id: str, db: AsyncSession):
         print("Error:", e)
         return {"error": str(e)}
 
-@router.post("/generated-exercises")
+@router.post("/get-plan")
 async def get_generated_exercises_info(request: Request, db: AsyncSession = Depends(get_db)):
     data = (await request.json())[0]
     results = []
@@ -58,7 +66,7 @@ async def get_generated_exercises_info(request: Request, db: AsyncSession = Depe
                 "exercises": []
             }
             for ex_id in group.get("exercises", []):
-                exercise_info = await get_exercise_from_DB(ex_id, db)
+                exercise_info = await get_exercise_from_db(ex_id, db)
                 if exercise_info:
                     group_result["exercises"].append(exercise_info)
                 else:
@@ -66,3 +74,16 @@ async def get_generated_exercises_info(request: Request, db: AsyncSession = Depe
             day_result["groups"].append(group_result)
         results.append(day_result)
     return results
+
+
+@router.post("/save-plan")
+async def save_generated_plan(training_plan: TrainingPlanSchema, request: Request, db: AsyncSession = Depends(get_db)):
+    encoded_jwt = get_token(request=request)
+    new_training_plan = TrainingPlans(
+        user_id = encoded_jwt["id"],
+        title = training_plan.title,
+        plan = training_plan.plan
+    )
+    db.add(new_training_plan)
+    await db.commit()
+    return JSONResponse(content={"message": "Training plan saved successfully"})

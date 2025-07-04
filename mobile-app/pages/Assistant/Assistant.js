@@ -25,6 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useSelector } from "react-redux";
 import themes from "../../design/themes";
+import Schema from "../../design/backgrounds/Schema";
 
 const MessageBubble = ({ text, isUser, style }) => {
     const textColor = isUser ? "#27374D" : "#DDE6ED";
@@ -117,7 +118,7 @@ export default function Assistant() {
             (newContent) => {
                 setGeneratedContent((prev) => [
                     ...prev,
-                    { date: Date(), content: newContent },
+                    { title: Date(), date: Date(), content: newContent },
                 ]);
             }
         );
@@ -170,6 +171,7 @@ export default function Assistant() {
             keyboardVerticalOffset={headerHeight}
         >
             <View style={style.main}>
+                <Schema />
                 <ScrollView
                     style={style.scrollView}
                     contentContainerStyle={[style.scrollViewContent]}
@@ -184,27 +186,25 @@ export default function Assistant() {
                         />
                     ))}
                 </ScrollView>
-                <View style={{ borderTopWidth: 1 }}>
-                    <View style={style.inputContainer}>
-                        <TextInput
-                            placeholder="Enter text:"
-                            placeholderTextColor={"#27374D"}
-                            onChangeText={handleInputChange}
-                            keyboardAppearance="dark"
-                            value={inputText}
-                            style={style.input}
+                <View style={style.inputContainer}>
+                    <TextInput
+                        placeholder="Enter text:"
+                        placeholderTextColor={"#27374D"}
+                        onChangeText={handleInputChange}
+                        keyboardAppearance="dark"
+                        value={inputText}
+                        style={style.input}
+                    />
+                    <TouchableOpacity
+                        onPress={handleSubmit}
+                        disabled={inputText === ""}
+                    >
+                        <Ionicons
+                            name="arrow-up-circle-outline"
+                            size={40}
+                            color={inputText === "" ? "#526D82" : "#27374D"}
                         />
-                        <TouchableOpacity
-                            onPress={handleSubmit}
-                            disabled={inputText === ""}
-                        >
-                            <Ionicons
-                                name="arrow-up-circle-outline"
-                                size={40}
-                                color={inputText === "" ? "#526D82" : "#27374D"}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         </KeyboardAvoidingView>

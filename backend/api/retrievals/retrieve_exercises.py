@@ -4,7 +4,7 @@ from sqlalchemy import text
 from api.db.db import get_db
 from typing import List, Dict
 
-router = APIRouter()
+router = APIRouter(prefix="/collection")
 
 @router.get("/{category}-exercises")
 async def retrieve_all_exercises(

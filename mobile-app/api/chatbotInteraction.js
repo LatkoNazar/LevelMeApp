@@ -1,5 +1,5 @@
 ﻿import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useSelector } from "react-redux";
 import { config } from "../config";
 
 export function generateId() {

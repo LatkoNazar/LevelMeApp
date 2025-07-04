@@ -1,10 +1,10 @@
 ﻿const CollectionOptionsAssets = {
     Exercises: {
-        img: require("../CollectionOptionsImages/exercises.jpg"),
+        img: require("../Images/CollectionOptionsImages/exercises.jpg"),
         text: "Exercises",
     },
     Nutrition: {
-        img: require("../CollectionOptionsImages/nutrition.jpg"),
+        img: require("../Images/CollectionOptionsImages/nutrition.jpg"),
         text: "Nutrition",
     },
 };

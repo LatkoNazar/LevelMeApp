@@ -21,14 +21,9 @@ export default function SettingsPage() {
 
     return (
         <View style={style.main}>
-            <View style={style.main}>
-                <TouchableOpacity
-                    style={style.logOutButton}
-                    onPress={handleLogOut}
-                >
-                    <AppText style={style.logOutText}>Log Out</AppText>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={style.logOutButton} onPress={handleLogOut}>
+                <AppText style={style.logOutText}>Log Out</AppText>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -36,10 +31,10 @@ export default function SettingsPage() {
 const styles = (theme) =>
     StyleSheet.create({
         main: {
-            backgroundColor: theme.mainBackgroundContainerColor,
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
+            backgroundColor: theme.mainBackgroundContainerColor,
         },
         logOutButton: {
             backgroundColor: "red",

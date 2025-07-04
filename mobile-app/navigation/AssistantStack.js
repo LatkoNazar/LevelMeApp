@@ -1,6 +1,6 @@
 ﻿import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Assistant from "../pages/Assistant/Assistant";
-import GeneratedResults from "../pages/GeneratedResults/GeneratedResults";
+import GeneratedResults from "../pages/Assistant/GeneratedResults";
 import ShowGeneratedResult from "../pages/ShowGeneratedResult/ShowGeneratedResult";
 const Stack = createNativeStackNavigator();
 

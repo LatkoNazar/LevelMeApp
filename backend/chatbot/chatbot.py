@@ -6,11 +6,13 @@ from chatbot.chat_memory import ChatMemory
 from typing import List, Dict
 from dotenv import load_dotenv
 from .rag_routes.workout_routing import extract_target_muscles, get_exercises
-from .chat_db_interaction.chat_chromaDB_interacrion import get_exercise_from_vercorDB
+from .chat_db_interaction.chat_chromaDB_interaction import get_exercise_from_vector_db
 import os
 
 from .chat_settings import model, url, GROQ_API_KEY
 from chatbot.chat_utils import call_chat
+
+DONE="[DONE]"
 
 backend_base_url=os.getenv("BACKEND_URL")
 
@@ -82,10 +84,6 @@ async def detect_rag_data_type(prompt: str, history: ChatMemory) -> str:
 
 
 async def default_chat(websocket: WebSocket, prompt: str):
-    # headers = {
-    #     "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-    #     "Content-Type": "application/json",
-    # }
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json"
@@ -101,8 +99,8 @@ async def default_chat(websocket: WebSocket, prompt: str):
             async for line in response.aiter_lines():
                 if line.startswith("data: "):
                     data = line.removeprefix("data: ").strip()
-                    if data == "[DONE]":
-                        await websocket.send_json({"type": "done", "message": "[DONE]"})
+                    if data == DONE:
+                        await websocket.send_json({"type": "done", "message": DONE})
                         break
                     try:
                         chunk = httpx.Response(200, content=data).json()
@@ -127,13 +125,13 @@ async def process_workout_rag_type(websocket: WebSocket, prompt: str, history: C
     exercises_json = await get_exercises(prompt=prompt, history=history, muscle_groups=muscles)
     if isinstance(exercises_json, str):
         exercises_json = json.loads(exercises_json)
-    exercises = await get_exercise_from_vercorDB(exercises_json=exercises_json)
+    exercises = get_exercise_from_vector_db(exercises_json=exercises_json)
     if "error" in exercises:
-        print("error")
+        print(f"get_exercise_from_vector_db: {exercises['error']}")
     else:
         await websocket.send_json({"type": "training_plan", "message": exercises})
         await websocket.send_json({"type": "message", "message": "**Your program is ready** ✅"})
-    await websocket.send_json({"type": "done", "message": "[DONE]"})
+    await websocket.send_json({"type": "done", "message": DONE})
 
 
 @router.websocket("/ws/{chat_id}")

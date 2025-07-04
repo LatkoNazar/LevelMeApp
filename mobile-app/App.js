@@ -1,10 +1,9 @@
 // REDUX
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./redux/store";
 
 // REACT HOOKS
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 // NAVIGATION
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -19,10 +18,14 @@ import MainTabsStack from "./navigation/MainTabsStack";
 import AuthStack from "./navigation/AuthStack";
 import { loginSuccess, logout, setToken } from "./redux/authSlice";
 
+import { StyleSheet, View } from "react-native";
+
 export default function Root() {
     return (
         <Provider store={store}>
-            <App />
+            <View style={{ flex: 1 }}>
+                <App />
+            </View>
         </Provider>
     );
 }

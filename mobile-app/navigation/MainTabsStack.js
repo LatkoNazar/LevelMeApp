@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // STACKS & PAGES
 import HomePage from "../pages/HomePage/HomePage";
 import DailyRoutineStack from "../navigation/DailyRoutineStack";
-import CollectionStack from "../navigation/CollectionStack";
+import BrowseStack from "../navigation/BrowseStack";
 import AssistantStack from "../navigation/AssistantStack";
 import ProfileStack from "../navigation/ProfileStack";
 
@@ -24,8 +24,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setTheme, markLoaded } from "../redux/themeSlice";
 import themes from "../design/themes";
 import SignupPage from "../pages/LoginAndSignUp/SignUp";
-const THEME_KEY = "APP_THEME";
 
+const THEME_KEY = "APP_THEME";
+const SIZE = 30;
 const Tab = createBottomTabNavigator();
 
 export default function MainTabsStack() {
@@ -51,7 +52,7 @@ export default function MainTabsStack() {
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, size, color }) => {
-                        if (route.name === "Assistant") {
+                        if (route.name === "Assistant Stack") {
                             const icon = focused
                                 ? require("../assets/icons/assistant_dark.png")
                                 : require("../assets/icons/assistant_light.png");
@@ -59,8 +60,8 @@ export default function MainTabsStack() {
                                 <Image
                                     source={icon}
                                     style={{
-                                        width: size,
-                                        height: size,
+                                        width: SIZE,
+                                        height: SIZE,
                                         tintColor: color,
                                     }}
                                     resizeMode="contain"
@@ -69,15 +70,17 @@ export default function MainTabsStack() {
                         } else {
                             let iconName;
 
-                            if (route.name === "Home") {
+                            if (route.name === "Home Stack") {
                                 iconName = focused ? "home" : "home-outline";
-                            } else if (route.name === "Your Daily Tasks") {
+                            } else if (
+                                route.name === "Your Daily Tasks Stack"
+                            ) {
                                 iconName = focused
                                     ? "checkmark-circle"
                                     : "checkmark-circle-outline";
-                            } else if (route.name === "Collection") {
-                                iconName = focused ? "star" : "star-outline";
-                            } else if (route.name === "Profile") {
+                            } else if (route.name === "Browse Stack") {
+                                iconName = focused ? "book" : "book-outline";
+                            } else if (route.name === "Profile Stack") {
                                 iconName = focused
                                     ? "person"
                                     : "person-outline";
@@ -85,7 +88,7 @@ export default function MainTabsStack() {
                             return (
                                 <Ionicons
                                     name={iconName}
-                                    size={size}
+                                    size={SIZE}
                                     color={color}
                                 />
                             );
@@ -99,26 +102,30 @@ export default function MainTabsStack() {
                     tabBarStyle: style.tabBarStyle,
                 })}
             >
-                <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen
-                    name="Your Daily Tasks"
+                    name="Home Stack"
+                    component={HomePage}
+                    options={{ headerShown: false, title: "Home" }}
+                />
+                <Tab.Screen
+                    name="Your Daily Tasks Stack"
                     component={DailyRoutineStack}
-                    options={{ headerShown: false }}
+                    options={{ headerShown: false, title: "Daily Tasks" }}
                 />
                 <Tab.Screen
-                    name="Assistant"
+                    name="Assistant Stack"
                     component={AssistantStack}
-                    options={{ headerShown: false }}
+                    options={{ headerShown: false, title: "Assistant" }}
                 />
                 <Tab.Screen
-                    name="Collection"
-                    component={CollectionStack}
-                    options={{ headerShown: false }}
+                    name="Browse Stack"
+                    component={BrowseStack}
+                    options={{ headerShown: false, title: "Browse" }}
                 />
                 <Tab.Screen
-                    name="Profile"
+                    name="Profile Stack"
                     component={ProfileStack}
-                    options={{ headerShown: false }}
+                    options={{ headerShown: false, title: "Profile" }}
                 />
             </Tab.Navigator>
         </View>
@@ -131,13 +138,9 @@ const styles = (theme) =>
             backgroundColor: theme.mainBackgroundContainerColor,
         },
         tabBarStyle: {
-            margin: 7,
-            marginTop: 0,
             backgroundColor: theme.tabBarColor,
-            borderRadius: 47,
             height: 100,
             paddingTop: 20,
-            marginTop: 10,
         },
         wrapper: {
             flex: 1,

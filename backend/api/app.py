@@ -11,7 +11,8 @@ from generators.vectorize import router as exercises_test_router
 from api.retrievals.generated_items_retrieval import router as generated_items_router
 from api.auth.login import router as login_router
 from api.auth.sign_up import router as sign_up_router
-
+from api.retrievals.retrieve_user_data import router as user_profile_router
+from api.generators.generate_workout import router as generate_program_with_button
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_database()
@@ -22,13 +23,14 @@ def create_app() -> FastAPI:
     load_dotenv(dotenv_path=env_path)
 
     app = FastAPI(lifespan=lifespan)
-
+    app.include_router(user_profile_router)
     app.include_router(login_router)
     app.include_router(sign_up_router)
     app.include_router(exercises_test_router)
     app.include_router(exercises_router)
     app.include_router(chatbot_router)
     app.include_router(generated_items_router)
+    app.include_router(generate_program_with_button)
     return app
 
 app = create_app()
