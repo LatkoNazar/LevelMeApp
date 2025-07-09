@@ -21,7 +21,6 @@ async def call_chat(messages: List[Dict], temperature: float = 0.0) -> str:
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(60.0)) as client:
             response = await client.post(url, headers=headers, json=payload)
-            print("Response: ", response)
             result = response.json()
             return result["choices"][0]["message"]["content"].strip()
     except Exception as e:

@@ -43,3 +43,28 @@ def get_exercise_from_vector_db(exercises_json):
         return result
     except Exception as e:
         return {"error": e}
+
+
+def get_recipes_from_vector_db(nutrition_plan_json):
+    collection = client.get_collection(name="food_recipes")
+    try:
+        result = []
+        for meal_obj in nutrition_plan_json:
+            meal_name = meal_obj.get("meal", "Meal")
+            dish_names = meal_obj.get("items", [])
+            query_vectors = [model.encode(dish).tolist() for dish in dish_names]
+            search_results = collection.query(
+                query_embeddings=query_vectors,
+                n_results=1,
+                include=["documents"]
+            )
+            matched_recipe_docs = [doc for sublist in search_results["documents"] for doc in sublist]
+            updated_meal = {
+                "meal": meal_name,
+                "recipes": matched_recipe_docs
+            }
+            result.append(updated_meal)
+        return result
+
+    except Exception as e:
+        return {"error": str(e)}

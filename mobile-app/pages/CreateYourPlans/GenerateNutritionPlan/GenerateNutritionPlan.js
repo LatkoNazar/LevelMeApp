@@ -40,18 +40,8 @@ export default function GenerateNutritionPlan() {
     const [goal, setGoal] = useState(null);
     const [customNotes, setCustomNotes] = useState("");
 
-    function parseInputToArray(text) {
-        return text
-            .split(",")
-            .map((item) => item.trim())
-            .filter((item) => item.length > 0);
-    }
-
     async function handleSubmit() {
-        const chosenProducts = parseInputToArray(productsInput);
-        const allergies = parseInputToArray(allergiesInput);
-
-        if (!goal || chosenProducts.length === 0) {
+        if (!goal || productsInput.trim().length === 0) {
             Alert.alert(
                 "Missing Info",
                 "Please enter at least one product and select a nutrition goal."
@@ -66,20 +56,20 @@ export default function GenerateNutritionPlan() {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        products: chosenProducts,
-                        allergies,
-                        goal,
-                        notes: customNotes,
+                        available_products: productsInput,
+                        allergies_list: allergiesInput,
+                        goal: goal,
+                        additional_notes: customNotes,
                     }),
                 }
             );
 
             const data = await response.json();
-
-            navigation.navigate("Generated Nutrition Plan Result", {
+            navigation.navigate("Your Generated Result", {
                 title: "Nutrition Plan",
                 content: data.plan,
                 saveOpt: true,
+                planType: "nutrition_plan",
             });
         } catch (error) {
             Alert.alert("Error", "Something went wrong. Please try again.");
@@ -100,7 +90,7 @@ export default function GenerateNutritionPlan() {
                     keyboardShouldPersistTaps="handled"
                 >
                     <AppText style={style.detailtTitle}>
-                        Enter Available Products
+                        Enter Available Products*
                     </AppText>
                     <TextInput
                         multiline
@@ -127,7 +117,9 @@ export default function GenerateNutritionPlan() {
                         keyboardAppearance="dark"
                     />
 
-                    <AppText style={style.detailtTitle}>Nutrition Goal</AppText>
+                    <AppText style={style.detailtTitle}>
+                        Nutrition Goal*
+                    </AppText>
                     <View style={style.optionContainer}>
                         {nutritionGoals.map((item) => (
                             <TouchableOpacity
@@ -198,7 +190,7 @@ const styles = (theme) =>
         detailtTitle: {
             fontSize: 24,
             color: theme.GenerateTrainingProgramDetailTitle,
-            marginTop: 15,
+            marginTop: 5,
             marginBottom: 5,
         },
         optionContainer: {

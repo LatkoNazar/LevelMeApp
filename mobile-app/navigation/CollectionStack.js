@@ -2,17 +2,20 @@
 import Collection from "../pages/Collection/Collection";
 import ExercisesStack from "./ExercisesStack";
 import Nutrition from "../pages/Nutrition/Nutrition";
-
+import { useSelector, useDispatch } from "react-redux";
+import themes from "../design/themes";
 const Stack = createNativeStackNavigator();
 
 export default function CollectionStack() {
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
     return (
         <Stack.Navigator
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: "#9DB2BF",
+                    backgroundColor: theme.headerColor,
                 },
-                headerTintColor: "#27374D",
+                headerTintColor: theme.headerTintColor,
             }}
         >
             <Stack.Screen name="Your Collection" component={Collection} />

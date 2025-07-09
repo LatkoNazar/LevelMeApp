@@ -40,6 +40,7 @@ export default function GeneratedResults(props) {
                                     saveOpt: true,
                                     title: object.title,
                                     content: newContent,
+                                    planType: "training_program",
                                 });
                             } catch (error) {
                                 console.error(

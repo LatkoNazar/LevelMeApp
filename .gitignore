@@ -67,3 +67,8 @@ serviceAccountKey.json
 
 # .db
 *.db
+
+# chroma_storage
+chroma_storage
+
+13k-recipes.csv

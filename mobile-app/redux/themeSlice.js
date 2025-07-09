@@ -11,7 +11,7 @@ const themeSlice = createSlice({
     },
     reducers: {
         setTheme(state, action) {
-            state.mode = action.payload; // payload - theme name
+            state.mode = action.payload;
             state.loaded = true;
             AsyncStorage.setItem(THEME_KEY, action.payload);
         },

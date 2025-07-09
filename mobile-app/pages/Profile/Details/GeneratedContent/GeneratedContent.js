@@ -1,9 +1,9 @@
 ﻿import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { config } from "../../config.js";
-import AppText from "../../components/AppText.js";
-import themes from "../../design/themes.js";
+import { config } from "../../../../config.js";
+import AppText from "../../../../components/AppText.js";
+import themes from "../../../../design/themes.js";
 import { useSelector } from "react-redux";
 
 export default function GeneratedContent(props) {

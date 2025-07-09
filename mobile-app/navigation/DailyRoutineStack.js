@@ -2,17 +2,20 @@
 import ToDoList from "../pages/DailyRoutine/ToDoList";
 import TasksAndLists from "../pages/DailyRoutine/TasksAndLists";
 import CreateNewTask from "../pages/DailyRoutine/CreateNewTask";
-
+import { useSelector, useDispatch } from "react-redux";
+import themes from "../design/themes";
 const Stack = createNativeStackNavigator();
 
 export default function DailyRoutineStack() {
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
     return (
         <Stack.Navigator
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: "#9DB2BF",
+                    backgroundColor: theme.headerColor,
                 },
-                headerTintColor: "#27374D",
+                headerTintColor: theme.headerTintColor,
             }}
         >
             <Stack.Screen name="Your Tasks" component={ToDoList} />

@@ -91,6 +91,7 @@ export default function PlanDetails() {
                 title: "Generated Plan",
                 content: data.plan,
                 saveOpt: true,
+                planType: "training_program",
             });
         } catch (error) {
             Alert.alert("Error", "Something went wrong. Please try again.");

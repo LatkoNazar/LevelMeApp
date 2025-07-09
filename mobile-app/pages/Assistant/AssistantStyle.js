@@ -40,6 +40,8 @@ export const styles = (theme) =>
             borderRadius: 15,
             padding: 10,
             marginBottom: 5,
+            borderWidth: 1,
+            borderColor: "black",
         },
         textUser: {
             color: theme.AssistantBotMessageTextColor,

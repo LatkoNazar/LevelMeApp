@@ -12,3 +12,9 @@ def get_chroma_collection(name: str):
 
 def get_exercises_collection():
     return get_chroma_collection("exercises")
+
+def get_food_recipes_collection():
+    return get_chroma_collection("food_recipes")
+
+def del_collection(coll_name):
+    _CLIENT.delete_collection(name=coll_name)

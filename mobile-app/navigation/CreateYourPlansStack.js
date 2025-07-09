@@ -3,16 +3,20 @@ import CreateYourPlans from "../pages/CreateYourPlans/CreateYourPlans";
 import GenerateTrainingProgram from "../pages/CreateYourPlans/GenerateTrainingProgram/GenerateTrainingProgram";
 import ShowGeneratedResult from "../pages/ShowGeneratedResult/ShowGeneratedResult";
 import GenerateNutritionPlan from "../pages/CreateYourPlans/GenerateNutritionPlan/GenerateNutritionPlan";
+import { useSelector, useDispatch } from "react-redux";
+import themes from "../design/themes";
 const Stack = createNativeStackNavigator();
 
 export default function CreateYourPlansStack() {
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
     return (
         <Stack.Navigator
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: "#9DB2BF",
+                    backgroundColor: theme.headerColor,
                 },
-                headerTintColor: "#27374D",
+                headerTintColor: theme.headerTintColor,
             }}
         >
             <Stack.Screen

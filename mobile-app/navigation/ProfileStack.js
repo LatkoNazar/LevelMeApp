@@ -1,18 +1,23 @@
 ﻿import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useSelector, useDispatch } from "react-redux";
 import Profile from "../pages/Profile/Profile";
-import SettingsPage from "../pages/SettingsPage/SettingsPage";
-import GeneratedContent from "../pages/Profile/GeneratedContent";
+import SettingsPage from "../pages/Profile/Details/SettingsPage/SettingsPage";
+import GeneratedContent from "../pages/Profile/Details/GeneratedContent/GeneratedContent";
 import ShowGeneratedResult from "../pages/ShowGeneratedResult/ShowGeneratedResult";
+import BrowseStack from "./BrowseStack";
+import themes from "../design/themes";
 const Stack = createNativeStackNavigator();
 
 export default function ProfileStack() {
+    const currentThemeName = useSelector((state) => state.theme.mode);
+    const theme = themes[currentThemeName] || themes.standard;
     return (
         <Stack.Navigator
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: "#9DB2BF",
+                    backgroundColor: theme.headerColor,
                 },
-                headerTintColor: "#27374D",
+                headerTintColor: theme.headerTintColor,
             }}
         >
             <Stack.Screen name="Profile" component={Profile} />
@@ -25,6 +30,11 @@ export default function ProfileStack() {
                 component={ShowGeneratedResult}
             />
             <Stack.Screen name="Settings" component={SettingsPage} />
+            <Stack.Screen
+                name="Browse Stack"
+                component={BrowseStack}
+                options={{ headerShown: false, title: "Browse" }}
+            />
         </Stack.Navigator>
     );
 }

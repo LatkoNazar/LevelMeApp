@@ -1,64 +1,58 @@
-﻿import { useRoute, useNavigation } from "@react-navigation/native";
-import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useLayoutEffect } from "react";
+﻿import themes from "../../design/themes";
+import { useSelector } from "react-redux";
+import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
-import { Ionicons } from "@expo/vector-icons";
 import ExpandableContainer from "../../components/ExpandableContainer";
 import ExerciseCard from "../../components/ExerciseCard";
 
-import themes from "../../design/themes";
-import { config } from "../../config";
-import { useSelector } from "react-redux";
-
-import ShowGeneratedTrainingProgram from "./ShowGeneratedTrainingProgram";
-import ShowGeneratedNutritionPlan from "./ShowGeneratedNutritionPlan";
-
-import Schema from "../../design/backgrounds/Schema";
-
-export default function ShowGeneratedResult(props) {
-    const token = useSelector((state) => state.auth.token);
-    const route = useRoute();
-    const navigation = useNavigation();
-    const { title, content, saveOpt, planType } = route.params;
+export default function ShowGeneratedTrainingProgram({
+    content,
+    saveOpt,
+    handleSavePlan,
+}) {
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            title: title,
-        });
-    }, [navigation, title]);
-
-    async function handleSavePlan() {
-        fetch(`${config.BACKEND_URL}/chatbot/generated-plan/save-plan`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ title: title, plan: content }),
-        });
-    }
-
     return (
-        <>
-            <Schema />
-            {planType === "training_program" && (
-                <ShowGeneratedTrainingProgram
-                    content={content}
-                    saveOpt={saveOpt}
-                    handleSave={handleSavePlan}
-                />
+        <ScrollView style={style.container}>
+            <View>
+                {content.map((trainingDay, dayIndex) => (
+                    <View
+                        key={`${trainingDay.day}-${dayIndex}`}
+                        style={style.dayBlock}
+                    >
+                        <AppText style={style.dayTitle}>
+                            {trainingDay.day}
+                        </AppText>
+                        {trainingDay.groups.map((group) => (
+                            <View key={group.name} style={style.group}>
+                                <View style={style.groupHeader}>
+                                    <AppText style={style.groupText}>
+                                        {group.name} ({group.count})
+                                    </AppText>
+                                </View>
+                                {group.exercises.map((ex, exIndex) => (
+                                    <ExpandableContainer
+                                        key={`ex-${group.name}-${ex.name}-${exIndex}`}
+                                        title={ex.name}
+                                    >
+                                        <ExerciseCard item={ex} />
+                                    </ExpandableContainer>
+                                ))}
+                            </View>
+                        ))}
+                    </View>
+                ))}
+            </View>
+            {saveOpt && (
+                <TouchableOpacity
+                    style={style.saveButton}
+                    onPress={handleSavePlan}
+                >
+                    <AppText>Save Plan</AppText>
+                </TouchableOpacity>
             )}
-            {planType === "nutrition_plan" && (
-                <ShowGeneratedNutritionPlan
-                    content={content}
-                    saveOpt={saveOpt}
-                    handleSave={handleSavePlan}
-                />
-            )}
-        </>
+        </ScrollView>
     );
 }
 

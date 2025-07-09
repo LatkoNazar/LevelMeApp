@@ -5,10 +5,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // STACKS & PAGES
 import HomePage from "../pages/HomePage/HomePage";
 import DailyRoutineStack from "../navigation/DailyRoutineStack";
-import BrowseStack from "../navigation/BrowseStack";
+import AnalyticsStack from "../navigation/AnalyticsStack";
 import AssistantStack from "../navigation/AssistantStack";
 import ProfileStack from "../navigation/ProfileStack";
-
+import HomePageStack from "./HomePageStack";
 // ICONS & IMAGES
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native";
@@ -78,8 +78,10 @@ export default function MainTabsStack() {
                                 iconName = focused
                                     ? "checkmark-circle"
                                     : "checkmark-circle-outline";
-                            } else if (route.name === "Browse Stack") {
-                                iconName = focused ? "book" : "book-outline";
+                            } else if (route.name === "Analytics Stack") {
+                                iconName = focused
+                                    ? "stats-chart"
+                                    : "stats-chart-outline";
                             } else if (route.name === "Profile Stack") {
                                 iconName = focused
                                     ? "person"
@@ -104,7 +106,7 @@ export default function MainTabsStack() {
             >
                 <Tab.Screen
                     name="Home Stack"
-                    component={HomePage}
+                    component={HomePageStack}
                     options={{ headerShown: false, title: "Home" }}
                 />
                 <Tab.Screen
@@ -118,9 +120,9 @@ export default function MainTabsStack() {
                     options={{ headerShown: false, title: "Assistant" }}
                 />
                 <Tab.Screen
-                    name="Browse Stack"
-                    component={BrowseStack}
-                    options={{ headerShown: false, title: "Browse" }}
+                    name="Analytics Stack"
+                    component={AnalyticsStack}
+                    options={{ headerShown: false, title: "Analytics" }}
                 />
                 <Tab.Screen
                     name="Profile Stack"

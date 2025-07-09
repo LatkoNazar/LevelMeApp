@@ -1,6 +1,6 @@
 ﻿import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import AppText from "../../components/AppText";
-import ProfileButton from "../../components/ProfileButton";
+import SectionButton from "../../components/SectionButton";
 
 import themes from "../../design/themes";
 import { useSelector } from "react-redux";
@@ -76,7 +76,21 @@ export default function Profile() {
                 <AppText style={style.profileEmail}>{userData?.email}</AppText>
             </View>
             <View style={style.buttonsSection}>
-                <ProfileButton
+                <SectionButton
+                    text={"Info"}
+                    iconName={"id-card-outline"}
+                    handlePress={() => {}}
+                />
+            </View>
+            <View style={style.buttonsSection}>
+                <SectionButton
+                    text={"Browse"}
+                    iconName={"book-outline"}
+                    handlePress={() => navigation.navigate("Browse Stack")}
+                />
+            </View>
+            <View style={style.buttonsSection}>
+                <SectionButton
                     text={"Generated Content"}
                     iconName={"library-outline"}
                     handlePress={async () => {
@@ -95,9 +109,9 @@ export default function Profile() {
                 />
             </View>
             <View style={style.buttonsSection}>
-                <ProfileButton
+                <SectionButton
                     text={"Settings"}
-                    iconName={"settings"}
+                    iconName={"settings-outline"}
                     handlePress={() => navigation.navigate("Settings")}
                 />
             </View>
