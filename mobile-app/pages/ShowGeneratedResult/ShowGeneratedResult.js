@@ -69,7 +69,7 @@ const styles = (theme) =>
             padding: 16,
         },
         dayBlock: {
-            backgroundColor: theme.ShowGeneratedResultBackgroundColor,
+            backgroundColor: theme.ShowGeneratedResult.BackgroundColor,
             borderRadius: 14,
             padding: 16,
             marginBottom: 24,
@@ -84,7 +84,7 @@ const styles = (theme) =>
         dayTitle: {
             fontSize: 22,
             fontWeight: "700",
-            color: theme.ShowGeneratedresultTextColor,
+            color: theme.ShowGeneratedresult.TextColor,
             marginBottom: 12,
         },
         group: {
@@ -107,7 +107,7 @@ const styles = (theme) =>
         },
         exerciseText: {
             fontSize: 14,
-            color: theme.ShowGeneratedresultsTextColor,
+            color: theme.ShowGeneratedresults.TextColor,
             marginLeft: 10,
         },
         saveButton: {

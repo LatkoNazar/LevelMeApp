@@ -129,8 +129,10 @@ export default function GenerateNutritionPlan() {
                                     {
                                         backgroundColor:
                                             goal === item
-                                                ? theme.GenerateNutritionPlanButtonActive
-                                                : theme.GenerateNutritionPlanButtonNotActive,
+                                                ? theme.GenerateNutritionPlan
+                                                      .ButtonActive
+                                                : theme.GenerateNutritionPlan
+                                                      .ButtonNotActive,
                                         borderColor:
                                             goal === item
                                                 ? "white"
@@ -189,7 +191,7 @@ const styles = (theme) =>
         },
         detailtTitle: {
             fontSize: 24,
-            color: theme.GenerateTrainingProgramDetailTitle,
+            color: theme.GenerateNutritionPlan.DetailTitle,
             marginTop: 5,
             marginBottom: 5,
         },
@@ -206,7 +208,7 @@ const styles = (theme) =>
             borderRadius: 14,
             borderWidth: 1,
             borderColor: "transparent",
-            backgroundColor: theme.GenerateTrainingProgramButtonNotActive,
+            backgroundColor: theme.GenerateNutritionPlan.ButtonNotActive,
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.1,
@@ -225,14 +227,14 @@ const styles = (theme) =>
             marginBottom: 20,
             color: theme.AppTextColor,
             backgroundColor:
-                theme.GenerateNutritionPlanInputBackgroundColor || "#f5f5f5",
+                theme.GenerateNutritionPlan.InputBackgroundColor || "#f5f5f5",
         },
         submitButton: {
             backgroundColor: "#007AFF",
             padding: 15,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: theme.SignUpANDLoginButtonBorderColor,
+            borderColor: theme.SignUpANDLogin.ButtonBorderColor,
             alignItems: "center",
             marginVertical: 10,
         },

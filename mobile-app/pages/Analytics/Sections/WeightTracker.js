@@ -4,6 +4,8 @@ import { Dimensions } from "react-native";
 import { View, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import themes from "../../../design/themes";
+import CurveLine from "../../../design/backgrounds/CurveLine";
+import CustomTable from "../../../components/CustomTable";
 
 export default function WeightTracker() {
     const currentThemeName = useSelector((state) => state.theme.mode);
@@ -25,7 +27,7 @@ export default function WeightTracker() {
         { date: "2025-07-01", weight: 75.0 },
     ];
     const chartData = {
-        labels: weightData.map((item) => item.date.slice(5)),
+        labels: weightData.map((item) => item.date.slice(5).replace("-", ".")),
         datasets: [
             {
                 data: weightData.map((item) => item.weight),
@@ -42,19 +44,22 @@ export default function WeightTracker() {
                     height={chartHeight}
                     chartConfig={{
                         backgroundGradientFrom: "#012169",
-                        backgroundGradientFromOpacity: 1,
+                        backgroundGradientFromOpacity: 0,
                         backgroundGradientTo: "#00416A",
-                        backgroundGradientToOpacity: 0.9,
-                        color: (opacity = 1) => "#9DB2BF",
-                        labelColor: (opacity = 1) =>
-                            `rgba(255, 255, 255, ${opacity})`,
+                        backgroundGradientToOpacity: 0,
+                        color: (opacity = 1) => theme.Chart.lineColor,
+                        labelColor: (opacity = 1) => theme.Chart.textColor,
                         strokeWidth: 2,
                         barPercentage: 0.5,
                         useShadowColorFromDataset: false,
+                        fillShadowGradientFrom: "#000000",
+                        fillShadowGradientTo: "#000000",
+                        fillShadowGradientFromOpacity: 0.2,
+                        fillShadowGradientToOpacity: 0.2,
                         propsForDots: {
-                            r: "3",
-                            strokeWidth: "3",
-                            stroke: "#DDDDDD",
+                            r: "2",
+                            strokeWidth: "5",
+                            stroke: theme.Chart.dot.strokeColor,
                         },
                     }}
                     style={{
@@ -62,6 +67,17 @@ export default function WeightTracker() {
                         alignSelf: "center",
                     }}
                 />
+            </View>
+            <View style={style.tableContainer}>
+                <View style={style.statsTitleContainer}>
+                    <AppText style={style.statsTitleText}>History</AppText>
+                </View>
+                <View style={style.statsContainer}>
+                    <CustomTable
+                        cols={Object.keys(weightData[0])}
+                        data={weightData}
+                    />
+                </View>
             </View>
         </View>
     );
@@ -73,9 +89,19 @@ const styles = (theme) =>
             flex: 1,
             padding: 10,
             alignSelf: "center",
+            backgroundColor: "transparent",
         },
         chartContainer: {
             borderRadius: 15,
             overflow: "hidden",
+        },
+        statsTitleContainer: { marginBottom: 10 },
+        statsTitleText: {
+            fontWeight: "bold",
+            fontSize: 20,
+            color: theme.WeightTracker.titleColor,
+        },
+        tableContainer: {
+            margin: 10,
         },
     });

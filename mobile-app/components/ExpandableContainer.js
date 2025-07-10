@@ -37,7 +37,7 @@ export default function ExpandableContainer({ title, children }) {
 const styles = (theme) =>
     StyleSheet.create({
         exerciseContainer: {
-            backgroundColor: theme.ExpandableContainerBackgroundColor,
+            backgroundColor: theme.ExpandableContainer.BackgroundColor,
             borderRadius: 10,
             marginVertical: 5,
         },
@@ -54,7 +54,7 @@ const styles = (theme) =>
         },
         content: {
             padding: 12,
-            backgroundColor: theme.ExpandableContainerContentBackgroundColor,
+            backgroundColor: theme.ExpandableContainer.ContentBackgroundColor,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
         },

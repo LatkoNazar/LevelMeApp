@@ -16,7 +16,7 @@ export const styles = (theme) =>
             alignItems: "center",
             borderRadius: 10,
             borderWidth: 1,
-            backgroundColor: theme.AssistantInputContainerColor,
+            backgroundColor: theme.Assistant.InputContainerColor,
             margin: 15,
             height: 50,
             padding: 5,
@@ -30,11 +30,11 @@ export const styles = (theme) =>
         },
         userMessage: {
             alignSelf: "flex-end",
-            backgroundColor: theme.AssistantUserMessageBubbleColor,
+            backgroundColor: theme.Assistant.UserMessageBubbleColor,
         },
         botMessage: {
             alignSelf: "flex-start",
-            backgroundColor: theme.AssistantBotMessageBubbleColor,
+            backgroundColor: theme.Assistant.BotMessageBubbleColor,
         },
         bubble: {
             borderRadius: 15,
@@ -44,12 +44,12 @@ export const styles = (theme) =>
             borderColor: "black",
         },
         textUser: {
-            color: theme.AssistantBotMessageTextColor,
+            color: theme.Assistant.BotMessageTextColor,
             fontFamily: "Arial",
             fontSize: 16,
         },
         textBot: {
-            color: theme.AssistantBotMessageTexteColor,
+            color: theme.Assistant.BotMessageTextColor,
             fontFamily: "Arial",
             fontSize: 16,
         },

@@ -47,7 +47,7 @@ const styles = (theme) =>
             marginVertical: 12,
             width: "90%",
             alignSelf: "center",
-            backgroundColor: theme.OptionCardBackgroundColor,
+            backgroundColor: theme.OptionCard.BackgroundColor,
         },
         image: {
             width: "100%",
@@ -75,14 +75,14 @@ const styles = (theme) =>
             marginLeft: 16,
         },
         exploreButton: {
-            backgroundColor: theme.ExploreButtonBackgroundColor,
+            backgroundColor: theme.ExploreButton.BackgroundColor,
             paddingVertical: 10,
             paddingHorizontal: 20,
             borderRadius: 10,
             alignSelf: "center",
         },
         exploreButtonText: {
-            color: theme.ExploreButtonText,
+            color: theme.ExploreButton.TextColor,
             fontWeight: "600",
             fontSize: 16,
         },

@@ -38,9 +38,9 @@ const styles = (theme) =>
             padding: 15,
             marginBottom: 10,
             borderWidth: 1,
-            borderColor: theme.ExerciseCardBorderColor,
+            borderColor: theme.ExerciseCard.BorderColor,
             borderRadius: 15,
-            backgroundColor: theme.ExerciseCardBackgroundColor,
+            backgroundColor: theme.ExerciseCard.BackgroundColor,
         },
         title: {
             fontSize: 18,

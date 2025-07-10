@@ -40,7 +40,7 @@ const styles = (theme) =>
         profileButton: {
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: theme.ProfileButtonBackgroundColor,
+            backgroundColor: theme.SectionButtonBackgroundColor,
             borderRadius: 15,
             padding: 10,
             margin: 10,

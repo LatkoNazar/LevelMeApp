@@ -13,6 +13,28 @@
             textColor: "#DDE6ED",
             fillColor: "#27374D",
         },
+        AnalyticsSectionButton: {
+            textColor: "#DDE6ED",
+            fillColor: "#9DB2BF",
+            borderColor: "#DDE6ED",
+            activeFillColor: "#27374D",
+        },
+        WeightTracker: {
+            titleColor: "#DDE6ED",
+        },
+        Chart: {
+            lineColor: "white",
+            textColor: "white",
+            dot: {
+                strokeColor: "#9DB2BF",
+            },
+        },
+        CustomTable: {
+            borderColor: "black",
+            headerRowBackgroundColor: "#DDE6ED",
+            dataCellBorderBottom: "gray",
+            dataCellBackgroundColor: "#9DB2BF",
+        },
         AppTextColor: "#27374D",
 
         SignsColor: "#27374D",
@@ -25,49 +47,58 @@
 
         DailyRoutineButtonsColor: "#9DB2BF",
 
-        AssistantInputContainerColor: "#9DB2BF",
-        AssistantUserMessageBubbleColor: "#DDE6ED",
-        AssistantBotMessageBubbleColor: "#142338",
-        AssistantUserMessageTextColor: "#27374D",
-        AssistantBotMessageTextColor: "#DDE6ED",
+        Assistant: {
+            InputContainerColor: "#9DB2BF",
+            UserMessageBubbleColor: "#DDE6ED",
+            BotMessageBubbleColor: "#142338",
+            UserMessageTextColor: "#27374D",
+            BotMessageTextColor: "#DDE6ED",
+        },
 
         TaskToDoBackgroundColor: "#9DB2BF",
 
-        OptionCardBackgroundColor: "#9DB2BF",
+        OptionCard: { BackgroundColor: "#9DB2BF" },
 
-        ExpandableContainerBackgroundColor: "#27374D",
-        ExpandableContainerContentBackgroundColor: "#9DB2BF",
+        ExpandableContainer: {
+            BackgroundColor: "#27374D",
+            ContentBackgroundColor: "#9DB2BF",
+        },
+        ShowGeneratedresults: {
+            TextColor: "#DDE6ED",
+            OptionBackgroundColor: "#9DB2BF",
+        },
 
-        ShowGeneratedresultsTextColor: "#DDE6ED",
-        ShowGeneratedresultsOptionBackgroundColor: "#9DB2BF",
-
-        ShowGeneratedresultTextColor: "#F6F1F1",
-        ShowGeneratedResultBackgroundColor: "#526D82",
-
-        ExerciseCardBackgroundColor: "#f9f9f9",
-        ExerciseCardBorderColor: "black",
+        ShowGeneratedresult: {
+            TextColor: "#F6F1F1",
+            BackgroundColor: "#526D82",
+        },
+        ExerciseCard: { BackgroundColor: "#f9f9f9", BorderColor: "black" },
 
         AddTaskButtonModalContentBackgroundColor: "#9DB2BF",
+        ExploreButton: { BackgroundColor: "#27374D", TextColor: "#DDE6ED" },
 
-        ExploreButtonBackgroundColor: "#27374D",
-        ExploreButtonText: "#DDE6ED",
-
-        SignUpANDLoginInputBackgroundContainerColor: "#9DB2BF",
-        SignUpANDLoginButtonBorderColor: "#27374D",
-        SignUpANDLoginSwitchTextColor: "black",
+        SignUpANDLogin: {
+            InputBackgroundContainerColor: "#9DB2BF",
+            ButtonBorderColor: "#27374D",
+            SwitchTextColor: "black",
+        },
 
         SettingsLogOutButtonTextColor: "#9DB2BF",
 
-        ProfileButtonBackgroundColor: "#9DB2BF",
-        ProfileUserDataColor: "#F6F1F1",
+        Profile: { UserDataColor: "#F6F1F1" },
+        SectionButtonBackgroundColor: "#9DB2BF",
 
-        GenerateTrainingProgramButtonActive: "#526D82",
-        GenerateTrainingProgramButtonNotActive: "#9DB2BF",
-        GenerateTrainingProgramDetailTitle: "#9DB2BF",
-
-        GenerateNutritionPlanInputBackgroundColor: "#9DB2BF",
-        GenerateNutritionPlanButtonActive: "#526D82",
-        GenerateNutritionPlanButtonNotActive: "#9DB2BF",
+        GenerateTrainingProgram: {
+            ButtonActive: "#526D82",
+            ButtonNotActive: "#9DB2BF",
+            DetailTitle: "#9DB2BF",
+        },
+        GenerateNutritionPlan: {
+            InputBackgroundColor: "#9DB2BF",
+            ButtonActive: "#526D82",
+            ButtonNotActive: "#9DB2BF",
+            DetailTitle: "#9DB2BF",
+        },
     },
 
     blackAndWhite: {
@@ -79,6 +110,29 @@
         themeButton: {
             textColor: "white",
             fillColor: "black",
+        },
+        quoteStyle: {
+            textColor: "white",
+            fillColor: "black",
+        },
+        AnalyticsSectionButton: {
+            textColor: "black",
+            fillColor: "white",
+            borderColor: "black",
+            activeFillColor: "black",
+        },
+        WeightTracker: {
+            titleColor: "black",
+        },
+        CustomTable: {
+            borderColor: "gray",
+            headerRowBackgroundColor: "#eee",
+            dataCellBorderBottom: "#eee",
+        },
+        Chart: {
+            lineColor: "black",
+            textColor: "black",
+            dot: { strokeColor: "black" },
         },
         AppTextColor: "#000000",
 
@@ -92,48 +146,62 @@
 
         DailyRoutineButtonsColor: "#DDDDDD",
 
-        AssistantInputContainerColor: "#DDDDDD",
-        AssistantUserMessageBubbleColor: "#F2F2F2",
-        AssistantBotMessageBubbleColor: "#000000",
-        AssistantUserMessageTextColor: "#000000",
-        AssistantBotMessageTextColor: "#FFFFFF",
+        Assistant: {
+            InputContainerColor: "#DDDDDD",
+            UserMessageBubbleColor: "#F2F2F2",
+            BotMessageBubbleColor: "#000000",
+            UserMessageTextColor: "#000000",
+            BotMessageTextColor: "#FFFFFF",
+        },
 
         TaskToDoBackgroundColor: "#E0E0E0",
 
-        OptionCardBackgroundColor: "#F5F5F5",
+        OptionCard: { BackgroundColor: "#F5F5F5" },
 
-        ExpandableContainerBackgroundColor: "#000000",
-        ExpandableContainerContentBackgroundColor: "#F0F0F0",
+        ExpandableContainer: {
+            BackgroundColor: "#000000",
+            ContentBackgroundColor: "#F0F0F0",
+        },
 
-        ShowGeneratedresultsTextColor: "#000000",
-        ShowGeneratedresultsOptionBackgroundColor: "#F5F5F5",
+        ShowGeneratedresults: {
+            TextColor: "#000000",
+            OptionBackgroundColor: "#F5F5F5",
+        },
 
-        ShowGeneratedresultTextColor: "#FFFFFF",
-        ShowGeneratedResultBackgroundColor: "#333333",
+        ShowGeneratedresult: {
+            TextColor: "#FFFFFF",
+            BackgroundColor: "#333333",
+        },
 
-        ExerciseCardBackgroundColor: "#FFFFFF",
-        ExerciseCardBorderColor: "#000000",
+        ExerciseCard: {
+            BackgroundColor: "#FFFFFF",
+            BorderColor: "#000000",
+        },
 
         AddTaskButtonModalContentBackgroundColor: "#F5F5F5",
 
-        ExploreButtonBackgroundColor: "#000000",
-        ExploreButtonText: "#FFFFFF",
+        ExploreButton: { BackgroundColor: "#000000", TextColor: "#FFFFFF" },
 
-        SignUpANDLoginInputBackgroundContainerColor: "#F2F2F2",
-        SignUpANDLoginButtonBorderColor: "#000000",
-        SignUpANDLoginSwitchTextColor: "#000000",
+        SignUpANDLogin: {
+            InputBackgroundContainerColor: "#F2F2F2",
+            ButtonBorderColor: "#000000",
+            SwitchTextColor: "#000000",
+        },
 
         SettingsLogOutButtonTextColor: "#000000",
 
-        ProfileButtonBackgroundColor: "#EAEAEA",
-        ProfileUserDataColor: "#DDDDDD",
+        Profile: { UserDataColor: "#DDDDDD" },
+        SectionButtonBackgroundColor: "#EAEAEA",
 
-        GenerateTrainingProgramButtonActive: "#666666",
-        GenerateTrainingProgramButtonNotActive: "#CCCCCC",
-        GenerateTrainingProgramDetailTitle: "#DDDDDD",
-
-        GenerateNutritionPlanInputBackgroundColor: "#F2F2F2",
-        GenerateNutritionPlanButtonActive: "#666666",
-        GenerateNutritionPlanButtonNotActive: "#CCCCCC",
+        GenerateTrainingProgram: {
+            ButtonActive: "#666666",
+            ButtonNotActive: "#CCCCCC",
+            DetailTitle: "#DDDDDD",
+        },
+        GenerateNutritionPlan: {
+            InputBackgroundColor: "#F2F2F2",
+            ButtonActive: "#666666",
+            ButtonNotActive: "#CCCCCC",
+        },
     },
 };

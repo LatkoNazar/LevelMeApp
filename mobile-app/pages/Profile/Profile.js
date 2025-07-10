@@ -139,12 +139,12 @@ const styles = (theme) =>
             fontSize: 20,
             fontWeight: "bold",
             marginTop: 10,
-            color: theme.ProfileUserDataColor,
+            color: theme.Profile.UserDataColor,
         },
         profileEmail: {
             fontSize: 20,
             fontWeight: "bold",
             marginTop: 10,
-            color: theme.ProfileUserDataColor,
+            color: theme.Profile.UserDataColor,
         },
     });

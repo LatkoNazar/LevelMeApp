@@ -141,7 +141,7 @@ const styles = (theme) =>
             color: "black",
         },
         input: {
-            backgroundColor: theme.SignUpANDLoginInputBackgroundContainerColor,
+            backgroundColor: theme.SignUpANDLogin.InputBackgroundContainerColor,
             borderWidth: 1,
             borderColor: "black",
             padding: 12,
@@ -153,7 +153,7 @@ const styles = (theme) =>
             padding: 15,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: theme.SignUpANDLoginButtonBorderColor,
+            borderColor: theme.SignUpANDLogin.ButtonBorderColor,
             alignItems: "center",
             marginVertical: 10,
         },
@@ -163,7 +163,7 @@ const styles = (theme) =>
             fontWeight: "bold",
         },
         switchText: {
-            color: theme.SignUpANDLoginSwitchTextColor,
+            color: theme.SignUpANDLogin.SwitchTextColor,
             fontWeight: "bold",
             textAlign: "center",
             marginTop: 10,

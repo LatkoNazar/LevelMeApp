@@ -116,8 +116,10 @@ export default function PlanDetails() {
                                 {
                                     backgroundColor:
                                         chosenSplit === typeOfSplit
-                                            ? theme.GenerateTrainingProgramButtonActive
-                                            : theme.GenerateTrainingProgramButtonNotActive,
+                                            ? theme.GenerateTrainingProgram
+                                                  .ButtonActive
+                                            : theme.GenerateTrainingProgram
+                                                  .ButtonNotActive,
                                     borderColor:
                                         chosenSplit === typeOfSplit
                                             ? "white"
@@ -157,8 +159,10 @@ export default function PlanDetails() {
                                     backgroundColor: chosenMuscles.includes(
                                         muscle
                                     )
-                                        ? theme.GenerateTrainingProgramButtonActive
-                                        : theme.GenerateTrainingProgramButtonNotActive,
+                                        ? theme.GenerateTrainingProgram
+                                              .ButtonActive
+                                        : theme.GenerateTrainingProgram
+                                              .ButtonNotActive,
                                     borderColor: chosenMuscles.includes(muscle)
                                         ? "white"
                                         : "transparent",
@@ -202,8 +206,10 @@ export default function PlanDetails() {
                                     backgroundColor: chosenEquipment.includes(
                                         item
                                     )
-                                        ? theme.GenerateTrainingProgramButtonActive
-                                        : theme.GenerateTrainingProgramButtonNotActive,
+                                        ? theme.GenerateTrainingProgram
+                                              .ButtonActive
+                                        : theme.GenerateTrainingProgram
+                                              .ButtonNotActive,
                                     borderColor: chosenEquipment.includes(item)
                                         ? "white"
                                         : "transparent",
@@ -244,8 +250,10 @@ export default function PlanDetails() {
                                 {
                                     backgroundColor:
                                         chosenCategory === cat
-                                            ? theme.GenerateTrainingProgramButtonActive
-                                            : theme.GenerateTrainingProgramButtonNotActive,
+                                            ? theme.GenerateTrainingProgram
+                                                  .ButtonActive
+                                            : theme.GenerateTrainingProgram
+                                                  .ButtonNotActive,
                                     borderColor:
                                         chosenCategory === cat
                                             ? "white"
@@ -291,7 +299,7 @@ const styles = (theme) =>
         },
         detailtTitle: {
             fontSize: 24,
-            color: theme.GenerateTrainingProgramDetailTitle,
+            color: theme.GenerateTrainingProgram.DetailTitle,
         },
         typeOfSplitContainer: {
             flexDirection: "row",
@@ -307,7 +315,7 @@ const styles = (theme) =>
             borderRadius: 12,
             borderWidth: 1,
             borderColor: "transparent",
-            backgroundColor: theme.GenerateTrainingProgramButtonNotActive,
+            backgroundColor: theme.GenerateTrainingProgram.ButtonNotActive,
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.1,
@@ -327,7 +335,7 @@ const styles = (theme) =>
             padding: 15,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: theme.SignUpANDLoginButtonBorderColor,
+            borderColor: theme.SignUpANDLogin.ButtonBorderColor,
             alignItems: "center",
             marginVertical: 10,
         },
