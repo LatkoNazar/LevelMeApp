@@ -63,7 +63,7 @@ const styles = (theme) =>
             padding: 16,
         },
         dayBlock: {
-            backgroundColor: theme.ShowGeneratedResult.BackgroundColor,
+            backgroundColor: theme.ShowGeneratedresult.BackgroundColor,
             borderRadius: 14,
             padding: 16,
             marginBottom: 24,

@@ -9,6 +9,8 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { config } from "../../config";
 
+import { getGeneratedContentTitles } from "../../api/profileInteraction";
+
 import CurveLine from "../../design/backgrounds/CurveLine";
 
 export default function Profile() {
@@ -101,7 +103,8 @@ export default function Profile() {
                     iconName={"library-outline"}
                     handlePress={async () => {
                         try {
-                            const data = await getGeneratedContentTitles();
+                            const data = await getGeneratedContentTitles(token);
+                            setGeneratedContent(data);
                             navigation.navigate("Generated Content", {
                                 generatedContent: data,
                             });

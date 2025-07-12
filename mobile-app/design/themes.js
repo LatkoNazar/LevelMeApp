@@ -85,7 +85,7 @@
 
         SettingsLogOutButtonTextColor: "#9DB2BF",
 
-        Profile: { UserDataColor: "#F6F1F1" },
+        Profile: { UserDataColor: "#F6F1F1", editHealthInfo: "#9DB2BF" },
         SectionButtonBackgroundColor: "#9DB2BF",
 
         GenerateTrainingProgram: {
@@ -193,7 +193,7 @@
 
         SettingsLogOutButtonTextColor: "#000000",
 
-        Profile: { UserDataColor: "#DDDDDD" },
+        Profile: { UserDataColor: "#DDDDDD", editHealthInfo: "gray" },
         SectionButtonBackgroundColor: "#EAEAEA",
 
         GenerateTrainingProgram: {

@@ -23,6 +23,7 @@ export default function GeneratedContent(props) {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({ id: id }),
                 }
@@ -44,9 +45,10 @@ export default function GeneratedContent(props) {
                         onPress={async () => {
                             const content = await getGeneratedContent(item.id);
                             navigation.navigate("Your Generated Result", {
-                                saveOpt: false,
+                                saveOpt: true,
                                 title: item.title,
                                 content: content["plan"],
+                                planType: item.plan_type,
                             });
                         }}
                     >

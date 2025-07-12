@@ -11,7 +11,7 @@ from api.utils.token_utils import get_token
 from typing import Dict, List
 
 from ORM.users_table import UsersTable
-from ORM.training_plans import TrainingPlans
+from ORM.generated_plans import GeneratedPlans
 from schemas.training_plan_schema import PlanRequest
 
 router = APIRouter(prefix="/user-data")
@@ -30,8 +30,8 @@ async def get_profile_data(request: Request, db: AsyncSession = Depends(get_db))
 @router.get("/generated-content")
 async def get_generated_content(request: Request, db: AsyncSession = Depends(get_db)):
     encoded_jwt = get_token(request=request)
-    stmt = select(TrainingPlans.id, TrainingPlans.title, TrainingPlans.created_at).where(
-        TrainingPlans.user_id == encoded_jwt['id']
+    stmt = select(GeneratedPlans.id, GeneratedPlans.title, GeneratedPlans.created_at, GeneratedPlans.plan_type).where(
+        GeneratedPlans.user_id == encoded_jwt['id']
     )
     result = await db.execute(stmt)
     training_plans = result.fetchall()
@@ -40,6 +40,7 @@ async def get_generated_content(request: Request, db: AsyncSession = Depends(get
             "id": row.id,
             "title": row.title,
             "created_at": row.created_at.isoformat(),
+            "plan_type": row.plan_type,
         }
         for row in training_plans
     ]
@@ -48,7 +49,12 @@ async def get_generated_content(request: Request, db: AsyncSession = Depends(get
 @router.post("/generated-content/get-content")
 async def get_content(data: PlanRequest, db: AsyncSession = Depends(get_db)):
     id_ = data.id
-    stmt = select(TrainingPlans).where(TrainingPlans.id == id_)
+    stmt = select(GeneratedPlans).where(GeneratedPlans.id == id_)
     result = await db.execute(stmt)
-    training_plan = result.scalars().first()
-    return training_plan
+    generated_plan = result.scalars().first()
+    return {
+        "id": generated_plan.id,
+        "title": generated_plan.title,
+        "plan": generated_plan.plan,
+        "plan_type": generated_plan.plan_type,
+    }

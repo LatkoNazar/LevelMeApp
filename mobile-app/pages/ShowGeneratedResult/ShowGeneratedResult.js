@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import ShowGeneratedTrainingProgram from "./ShowGeneratedTrainingProgram";
 import ShowGeneratedNutritionPlan from "./ShowGeneratedNutritionPlan";
 
-import Schema from "../../design/backgrounds/Schema";
+import CurveLine from "../../design/backgrounds/CurveLine";
 
 export default function ShowGeneratedResult(props) {
     const token = useSelector((state) => state.auth.token);
@@ -37,25 +37,28 @@ export default function ShowGeneratedResult(props) {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ title: title, plan: content }),
+            body: JSON.stringify({
+                title: title,
+                plan: content,
+                plan_type: planType,
+            }),
         });
     }
-
     return (
         <>
-            <Schema />
+            <CurveLine />
             {planType === "training_program" && (
                 <ShowGeneratedTrainingProgram
                     content={content}
                     saveOpt={saveOpt}
-                    handleSave={handleSavePlan}
+                    handleSavePlan={handleSavePlan}
                 />
             )}
             {planType === "nutrition_plan" && (
                 <ShowGeneratedNutritionPlan
                     content={content}
                     saveOpt={saveOpt}
-                    handleSave={handleSavePlan}
+                    handleSavePlan={handleSavePlan}
                 />
             )}
         </>
@@ -69,7 +72,7 @@ const styles = (theme) =>
             padding: 16,
         },
         dayBlock: {
-            backgroundColor: theme.ShowGeneratedResult.BackgroundColor,
+            backgroundColor: theme.ShowGeneratedresult.BackgroundColor,
             borderRadius: 14,
             padding: 16,
             marginBottom: 24,

@@ -1,10 +1,6 @@
 ﻿from pydantic import BaseModel
 from typing import Any, List
 
-class TrainingPlanSchema(BaseModel):
-    title: str
-    plan: Any
-
 class PlanRequest(BaseModel):
     id: int
 

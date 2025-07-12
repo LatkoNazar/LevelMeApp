@@ -8,8 +8,8 @@ import json
 import jwt
 import os
 
-from ORM.training_plans import TrainingPlans
-from schemas.training_plan_schema import TrainingPlanSchema
+from ORM.generated_plans import GeneratedPlans
+from schemas.generated_plan_schema import GeneratedPlanSchema
 from api.utils.token_utils import get_token
 
 router = APIRouter(prefix="/chatbot/generated-plan")
@@ -77,12 +77,13 @@ async def get_generated_exercises_info(request: Request, db: AsyncSession = Depe
 
 
 @router.post("/save-plan")
-async def save_generated_plan(training_plan: TrainingPlanSchema, request: Request, db: AsyncSession = Depends(get_db)):
+async def save_generated_plan(generated_plan: GeneratedPlanSchema, request: Request, db: AsyncSession = Depends(get_db)):
     encoded_jwt = get_token(request=request)
-    new_training_plan = TrainingPlans(
+    new_training_plan = GeneratedPlans(
         user_id = encoded_jwt["id"],
-        title = training_plan.title,
-        plan = training_plan.plan
+        title = generated_plan.title,
+        plan = generated_plan.plan,
+        plan_type = generated_plan.plan_type
     )
     db.add(new_training_plan)
     await db.commit()

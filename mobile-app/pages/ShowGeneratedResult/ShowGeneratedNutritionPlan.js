@@ -1,14 +1,16 @@
-﻿import { ScrollView, StyleSheet, View } from "react-native";
+﻿import { ScrollView, StyleSheet, View, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
 import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
-export default function ShowGeneratedNutritionPlan({ content = [] }) {
+export default function ShowGeneratedNutritionPlan({
+    content,
+    saveOpt,
+    handleSavePlan,
+}) {
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
-    console.log("Fetched plan:", JSON.stringify(content, null, 2));
-
     return (
         <ScrollView style={style.mainContainer}>
             {Array.isArray(content.plan) &&
@@ -27,6 +29,14 @@ export default function ShowGeneratedNutritionPlan({ content = [] }) {
                         ))}
                     </View>
                 ))}
+            {saveOpt && (
+                <TouchableOpacity
+                    style={style.saveButton}
+                    onPress={handleSavePlan}
+                >
+                    <AppText>Save Plan</AppText>
+                </TouchableOpacity>
+            )}
         </ScrollView>
     );
 }
@@ -58,5 +68,17 @@ const styles = (theme) =>
             fontSize: 14,
             color: theme.AppTextColor || "#333",
             lineHeight: 20,
+        },
+        saveButton: {
+            backgroundColor: "lightblue",
+            padding: 16,
+            borderRadius: 14,
+            alignItems: "center",
+            marginBottom: 20,
+            shadowColor: "#34C759",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.2,
+            shadowRadius: 6,
+            elevation: 3,
         },
     });
