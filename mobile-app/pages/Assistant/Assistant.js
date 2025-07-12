@@ -25,7 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useSelector } from "react-redux";
 import themes from "../../design/themes";
-import Schema from "../../design/backgrounds/Schema";
+import CurveLine from "../../design/backgrounds/CurveLine";
 
 const MessageBubble = ({ text, isUser, style }) => {
     const textColor = isUser ? "#27374D" : "#DDE6ED";
@@ -171,7 +171,7 @@ export default function Assistant() {
             keyboardVerticalOffset={headerHeight}
         >
             <View style={style.main}>
-                <Schema />
+                <CurveLine />
                 <ScrollView
                     style={style.scrollView}
                     contentContainerStyle={[style.scrollViewContent]}

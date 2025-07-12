@@ -79,7 +79,13 @@ export default function Profile() {
                 <SectionButton
                     text={"Info"}
                     iconName={"id-card-outline"}
-                    handlePress={() => {}}
+                    handlePress={() =>
+                        navigation.navigate("Info", {
+                            first_name: userData?.first_name,
+                            last_name: userData?.last_name,
+                            email: userData?.email,
+                        })
+                    }
                 />
             </View>
             <View style={style.buttonsSection}>

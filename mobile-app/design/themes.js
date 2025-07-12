@@ -99,6 +99,9 @@
             ButtonNotActive: "#9DB2BF",
             DetailTitle: "#9DB2BF",
         },
+        MoodTracker: {
+            moodScaleColor: "#27374D",
+        },
     },
 
     blackAndWhite: {
@@ -202,6 +205,9 @@
             InputBackgroundColor: "#F2F2F2",
             ButtonActive: "#666666",
             ButtonNotActive: "#CCCCCC",
+        },
+        MoodTracker: {
+            moodScaleColor: "black",
         },
     },
 };

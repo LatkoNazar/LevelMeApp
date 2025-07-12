@@ -9,7 +9,7 @@ import {
 import PropTypes from "prop-types";
 import ExerciseCard from "../../components/ExerciseCard.js";
 import { getAllExercises } from "../../api/exercisesRetrieval.js";
-import Schema from "../../design/backgrounds/Schema.js";
+import CurveLine from "../../design/backgrounds/CurveLine.js";
 import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
@@ -62,7 +62,7 @@ export default function ExercisesList({ route }) {
 
     return (
         <View style={{ flex: 1 }}>
-            <Schema />
+            <CurveLine />
             <FlatList
                 data={exercises}
                 keyExtractor={(item) => item.id.toString()}

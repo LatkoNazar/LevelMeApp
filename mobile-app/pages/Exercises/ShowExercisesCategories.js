@@ -7,7 +7,7 @@ import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 import { exerciseCategories } from "./exerciseCategories";
-import Schema from "../../design/backgrounds/Schema";
+import CurveLine from "../../design/backgrounds/CurveLine";
 
 export default function ShowExerciseCategories() {
     const navigation = useNavigation();
@@ -18,7 +18,7 @@ export default function ShowExerciseCategories() {
 
     return (
         <>
-            <Schema />
+            <CurveLine />
             <ScrollView style={style.main}>
                 <View style={style.container}>
                     {exerciseCategories.map((optionObject) => (

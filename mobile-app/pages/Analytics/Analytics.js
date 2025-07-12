@@ -7,6 +7,8 @@ import AnalyticsSectionButton from "../../components/AnalyticsSectionButton";
 import { useNavigation } from "@react-navigation/native";
 
 import WeightTracker from "./Sections/WeightTracker";
+import SleepTracker from "./Sections/SleepTracker";
+import MoodTracker from "./Sections/MoodTracker";
 
 export default function Analytics() {
     const navigation = useNavigation();
@@ -21,9 +23,21 @@ export default function Analytics() {
             case "Weight":
                 return <WeightTracker />;
             case "Sleep":
-                return <AppText>Sleep Section (в розробці)</AppText>;
+                return <SleepTracker />;
+            case "Mood":
+                return <MoodTracker />;
             default:
-                return <AppText>Оберіть секцію</AppText>;
+                return (
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <AppText>Оберіть секцію</AppText>
+                    </View>
+                );
         }
     };
 
@@ -51,6 +65,14 @@ export default function Analytics() {
                         }}
                         active={currentSection === "Sleep"}
                     />
+                    <AnalyticsSectionButton
+                        text={"Mood"}
+                        iconName={"happy-outline"}
+                        handlePress={() => {
+                            setCurrentSection("Mood");
+                        }}
+                        active={currentSection === "Mood"}
+                    />
                 </ScrollView>
             </View>
             <View style={style.chartContainer}>{renderSection()}</View>
@@ -74,7 +96,6 @@ const styles = (theme) =>
         },
         chartContainer: {
             flex: 1,
-            borderRadius: 15,
             overflow: "hidden",
         },
     });

@@ -7,7 +7,7 @@ import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 import { createYourPlansOptions } from "./createYourPlansOptions";
-import Schema from "../../design/backgrounds/Schema";
+import CurveLine from "../../design/backgrounds/CurveLine";
 
 export default function CreateYourPlans() {
     const navigation = useNavigation();
@@ -18,7 +18,7 @@ export default function CreateYourPlans() {
 
     return (
         <>
-            <Schema />
+            <CurveLine />
             <ScrollView style={style.main}>
                 <View style={style.container}>
                     {createYourPlansOptions.map((optionObject) => (

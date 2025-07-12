@@ -13,27 +13,49 @@ export default function WeightTracker() {
     const style = styles(theme);
 
     const screenWidth = Dimensions.get("window").width;
-    const horizontalPadding = 10 * 2; // зліва + справа
+    const horizontalPadding = 10 * 2;
     const chartWidth = screenWidth - horizontalPadding;
     const chartHeight = (chartWidth / 5) * 3;
 
     const weightData = [
         { date: "2025-06-01", weight: 78.5 },
-        { date: "2025-06-05", weight: 77.9 },
-        { date: "2025-06-10", weight: 77.4 },
-        { date: "2025-06-15", weight: 76.8 },
-        { date: "2025-06-20", weight: 76.2 },
-        { date: "2025-06-25", weight: 75.7 },
-        { date: "2025-07-01", weight: 75.0 },
+        { date: "2025-06-05", weight: 79.3 },
+        { date: "2025-06-10", weight: 78.3 },
+        { date: "2025-06-15", weight: 78.2 },
+        { date: "2025-06-20", weight: null },
+        { date: "2025-06-25", weight: 78.0 },
+        { date: "2025-07-01", weight: 77.5 },
     ];
+
+    const filteredData = weightData.filter((item) => item.weight !== null);
     const chartData = {
-        labels: weightData.map((item) => item.date.slice(5).replace("-", ".")),
+        labels: filteredData.map((item) =>
+            item.date.slice(5).replace("-", ".")
+        ),
         datasets: [
             {
-                data: weightData.map((item) => item.weight),
+                data: filteredData.map((item) => item.weight),
             },
         ],
     };
+
+    const newWeightDataFormat = weightData.map((item) => {
+        return {
+            date: item.date,
+            weight: item.weight ? item.weight : "No info",
+        };
+    });
+
+    function getColName(key) {
+        switch (key) {
+            case "date":
+                return "Date";
+            case "weight":
+                return "Your Weight";
+            default:
+                return key;
+        }
+    }
 
     return (
         <View style={style.mainContainer}>
@@ -69,15 +91,12 @@ export default function WeightTracker() {
                 />
             </View>
             <View style={style.tableContainer}>
-                <View style={style.statsTitleContainer}>
-                    <AppText style={style.statsTitleText}>History</AppText>
-                </View>
-                <View style={style.statsContainer}>
-                    <CustomTable
-                        cols={Object.keys(weightData[0])}
-                        data={weightData}
-                    />
-                </View>
+                <AppText style={style.title}>History</AppText>
+                <CustomTable
+                    labels={Object.keys(newWeightDataFormat[0]).map(getColName)}
+                    cols={Object.keys(newWeightDataFormat[0])}
+                    data={newWeightDataFormat}
+                />
             </View>
         </View>
     );
@@ -87,21 +106,19 @@ const styles = (theme) =>
     StyleSheet.create({
         mainContainer: {
             flex: 1,
-            padding: 10,
-            alignSelf: "center",
-            backgroundColor: "transparent",
+            padding: 20,
+            backgroundColor: theme.mainBackgroundContainerColor,
         },
         chartContainer: {
-            borderRadius: 15,
             overflow: "hidden",
         },
-        statsTitleContainer: { marginBottom: 10 },
-        statsTitleText: {
-            fontWeight: "bold",
-            fontSize: 20,
-            color: theme.WeightTracker.titleColor,
-        },
         tableContainer: {
-            margin: 10,
+            flex: 1,
+        },
+        title: {
+            fontSize: 18,
+            fontWeight: "bold",
+            color: theme.AppTextColor,
+            marginBottom: 10,
         },
     });

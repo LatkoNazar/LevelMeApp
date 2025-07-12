@@ -1,30 +1,34 @@
 ﻿import { useSelector } from "react-redux";
 import themes from "../design/themes";
 import { View, Text, StyleSheet } from "react-native";
+import AppText from "./AppText";
 
 export default function CustomTable(props) {
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
 
+    const labels = props.labels;
     const cols = props.cols;
     const data = props.data;
     return (
         <View style={style.table}>
             <View style={style.headerRow}>
-                {cols.map((colName) => (
-                    <Text style={style.headerCell}>{colName}</Text>
+                {labels.map((colName, index) => (
+                    <AppText key={`header-${index}`} style={style.headerCell}>
+                        {colName}
+                    </AppText>
                 ))}
             </View>
             {data.map((row, rowIndex) => (
                 <View key={`${rowIndex}-${row}`} style={style.dataRow}>
                     {cols.map((colName, cellIndex) => (
-                        <Text
+                        <AppText
                             key={`${cellIndex}-${colName}`}
                             style={style.dataCell}
                         >
                             {row[colName]}
-                        </Text>
+                        </AppText>
                     ))}
                 </View>
             ))}

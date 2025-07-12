@@ -7,7 +7,7 @@ import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 import { browseOptions } from "./browseOptions";
-import Schema from "../../design/backgrounds/Schema";
+import CurveLine from "../../design/backgrounds/CurveLine";
 
 export default function BrowsePage() {
     const navigation = useNavigation();
@@ -18,7 +18,7 @@ export default function BrowsePage() {
 
     return (
         <>
-            <Schema />
+            <CurveLine />
             <ScrollView style={style.main}>
                 <View style={style.container}>
                     {browseOptions.map((optionObject) => (
