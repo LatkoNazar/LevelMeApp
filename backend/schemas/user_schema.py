@@ -10,3 +10,10 @@ class UserLoginSchema(BaseModel):
     email: str
     password: str
     device_info: str
+
+class PhysicalInfoSchema(BaseModel):
+    age: float
+    sex: str
+    height: float
+    weight: float
+    body_type: str

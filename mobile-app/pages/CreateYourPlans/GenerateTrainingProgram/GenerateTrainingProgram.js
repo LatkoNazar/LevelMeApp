@@ -13,7 +13,11 @@ import { useState } from "react";
 import { config } from "../../../config.js";
 import { useNavigation } from "@react-navigation/native";
 
+import { createYourPlansClient } from "../../../api/createYourPlansClient.js";
+
 export default function PlanDetails() {
+    const api = createYourPlansClient();
+
     const navigation = useNavigation();
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
@@ -67,26 +71,7 @@ export default function PlanDetails() {
         }
 
         try {
-            console.log("START");
-            const response = await fetch(
-                `${config.BACKEND_URL}/generators/generate-workout`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        muscle_groups: chosenMuscles,
-                        type_of_split: chosenSplit,
-                        equipment: chosenEquipment,
-                        goal: chosenCategory,
-                    }),
-                }
-            );
-
-            const data = await response.json();
-            console.log(JSON.stringify(data.plan, null, 2));
-
+            const data = await api.generateTrainingProgram();
             navigation.navigate("Your Generated Result", {
                 title: "Generated Plan",
                 content: data.plan,
@@ -97,8 +82,6 @@ export default function PlanDetails() {
             Alert.alert("Error", "Something went wrong. Please try again.");
             console.error("Submit error:", error);
         }
-
-        console.log("END");
     }
 
     return (

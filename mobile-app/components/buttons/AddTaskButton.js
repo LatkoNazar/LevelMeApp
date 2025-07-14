@@ -8,9 +8,9 @@ import {
     StyleSheet,
 } from "react-native";
 import PropTypes from "prop-types";
-import AppText from "./AppText";
+import AppText from "../AppText";
 
-import themes from "../design/themes";
+import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 export default function AddTaskButton(props) {

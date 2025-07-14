@@ -58,9 +58,20 @@ export default function DailyQuote() {
             {loading ? (
                 <ActivityIndicator />
             ) : (
-                <View style={style.quoteContainer}>
-                    <AppText style={style.quoteText}>«{quote}»</AppText>
-                    <AppText style={style.quoteText}> - {author}</AppText>
+                <View style={style.mainContainer}>
+                    <View style={style.vertivalBar}></View>
+                    <View style={style.quoteContainer}>
+                        <View style={style.quoteContainer}>
+                            <AppText style={style.quoteSign}>❝</AppText>
+                            <AppText style={style.quoteText}>«{quote}»</AppText>
+                        </View>
+                        <View style={style.authorContainer}>
+                            <AppText style={style.quoteText}>
+                                {" "}
+                                - {author}
+                            </AppText>
+                        </View>
+                    </View>
                 </View>
             )}
         </View>
@@ -69,16 +80,27 @@ export default function DailyQuote() {
 
 const styles = (theme) =>
     StyleSheet.create({
+        mainContainer: {
+            flexDirection: "row",
+            borderWidth: 1,
+        },
         quoteContainer: {
             padding: 5,
-            borderWidth: 1,
-            borderRadius: 10,
-            backgroundColor: theme.quoteStyle.fillColor,
         },
         quoteText: {
-            color: theme.quoteStyle.textColor,
             fontStyle: "italic",
             fontSize: 14,
-            marginTop: 6,
+        },
+        vertivalBar: {
+            backgroundColor: theme.quoteStyle.fillColor,
+            width: 8,
+        },
+        authorContainer: {
+            alignItems: "flex-end",
+            marginTop: 5,
+            marginRight: 20,
+        },
+        quoteSign: {
+            fontSize: 40,
         },
     });

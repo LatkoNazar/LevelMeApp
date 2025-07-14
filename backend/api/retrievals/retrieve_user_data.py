@@ -12,7 +12,9 @@ from typing import Dict, List
 
 from ORM.users_table import UsersTable
 from ORM.generated_plans import GeneratedPlans
+from ORM.physical_info import PhysicalInfo
 from schemas.training_plan_schema import PlanRequest
+from schemas.user_schema import PhysicalInfoSchema
 
 router = APIRouter(prefix="/user-data")
 
@@ -58,3 +60,28 @@ async def get_content(data: PlanRequest, db: AsyncSession = Depends(get_db)):
         "plan": generated_plan.plan,
         "plan_type": generated_plan.plan_type,
     }
+
+@router.post("/info/save-physical-info")
+async def save_physical_info(request: Request, data: PhysicalInfoSchema, db: AsyncSession = Depends(get_db)):
+    encoded_jwt = get_token(request=request)
+    physical_info = PhysicalInfo(
+        user_id = encoded_jwt["id"],
+        age = data.age,
+        sex = data.sex,
+        height = data.height,
+        weight = data.weight,
+        body_type = data.body_type
+    )
+    db.add(physical_info)
+    await db.commit()
+    return {"message": "Physical data was added successfully"}
+
+@router.post("/info/check-physical-info")
+async def check_physical_info(request: Request, db: AsyncSession = Depends(get_db)):
+    encoded_jwt = get_token(request=request)
+    stmt = select(PhysicalInfo).where(PhysicalInfo.user_id == encoded_jwt["id"])
+    result = await db.execute(stmt)
+    physical_info_result = result.scalars().first()
+    if not physical_info_result:
+        return {"result": 0, "physical_info": None}
+    return {"result": 1, "physical_info": physical_info_result}

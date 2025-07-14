@@ -3,6 +3,8 @@
     StyleSheet,
     TouchableOpacity,
     Modal,
+    TouchableWithoutFeedback,
+    Keyboard,
     TextInput,
     ScrollView,
 } from "react-native";
@@ -14,7 +16,40 @@ import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { config } from "../../../../config";
 
+import { createProfileClient } from "../../../../api/profileClient";
+
+const LabeledInput = ({ label, value, setValue, error, isEditing }) => (
+    <View style={{ marginBottom: 10, zIndex: 0 }}>
+        <AppText>{label}</AppText>
+        <TextInput
+            editable={isEditing}
+            value={value}
+            onChangeText={setValue}
+            keyboardType="numeric"
+            style={{
+                borderColor: error ? "red" : "#ccc",
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 8,
+                marginTop: 4,
+                backgroundColor: isEditing ? "#fff" : "#eee",
+                color: "#000",
+            }}
+        />
+        {error && (
+            <AppText style={{ color: "red", fontSize: 12, marginTop: 4 }}>
+                {error}
+            </AppText>
+        )}
+    </View>
+);
+
 export default function UserInfoPage() {
+    const token = useSelector((state) => state.auth.token);
+    const api = createProfileClient(token);
+
+    const [infoInDatabase, setInfoInDatabase] = useState(false);
+
     const route = useRoute();
     const { first_name, last_name, email } = route.params || {};
     const currentThemeName = useSelector((state) => state.theme.mode);
@@ -51,32 +86,6 @@ export default function UserInfoPage() {
         if (!h || !w) return "-";
         return (w / (h * h)).toFixed(1);
     };
-
-    const LabeledInput = ({ label, value, setValue, error }) => (
-        <View style={{ marginBottom: 10, zIndex: 0 }}>
-            <AppText>{label}</AppText>
-            <TextInput
-                editable={isEditing}
-                value={value}
-                onChangeText={setValue}
-                keyboardType="numeric"
-                style={{
-                    borderColor: error ? "red" : "#ccc",
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    padding: 8,
-                    marginTop: 4,
-                    backgroundColor: isEditing ? "#fff" : "#eee",
-                    color: "#000",
-                }}
-            />
-            {error && (
-                <AppText style={{ color: "red", fontSize: 12, marginTop: 4 }}>
-                    {error}
-                </AppText>
-            )}
-        </View>
-    );
 
     const validateInputs = () => {
         const newErrors = {};
@@ -115,10 +124,6 @@ export default function UserInfoPage() {
         return Object.keys(newErrors).length === 0;
     };
 
-    async function saveToDB(data) {
-        fetch(``);
-    }
-
     return (
         <View style={style.main}>
             <View style={style.infoBlock}>
@@ -132,10 +137,26 @@ export default function UserInfoPage() {
                 <AppText style={style.value}>{email}</AppText>
             </View>
             <View style={style.infoBlock}>
-                <AppText style={style.label}>Physical Info</AppText>
+                <AppText style={style.label}>
+                    Your Initial Physical Information
+                </AppText>
                 <TouchableOpacity
                     style={style.editPhysicalInfo}
-                    onPress={() => setModalVisible(true)}
+                    onPress={async () => {
+                        const response = await api.checkPhysicalInfo();
+                        if (response.result) {
+                            const info = response.physical_info;
+                            setAge(String(info.age));
+                            setSex(info.sex);
+                            setWeight(String(info.weight));
+                            setHeight(String(info.height));
+                            setBodyType(info.body_type);
+                            setInfoInDatabase(true);
+                        } else {
+                            setInfoInDatabase(response.result);
+                        }
+                        setModalVisible(true);
+                    }}
                 >
                     <AppText>Show Info</AppText>
                 </TouchableOpacity>
@@ -147,184 +168,211 @@ export default function UserInfoPage() {
                 animationType="slide"
                 onRequestClose={() => setModalVisible(false)}
             >
-                <View style={style.modalOverlay}>
-                    <View style={style.modalContainer}>
-                        <ScrollView
-                            keyboardShouldPersistTaps="handled"
-                            nestedScrollEnabled
-                        >
-                            <LabeledInput
-                                label="Age"
-                                value={age}
-                                setValue={setAge}
-                                error={errors.age}
-                            />
-
-                            {isEditing ? (
-                                <View
-                                    style={{ zIndex: 1000, marginBottom: 20 }}
-                                >
-                                    <AppText>Sex</AppText>
-                                    <DropDownPicker
-                                        open={sexOpen}
-                                        value={sex}
-                                        items={sexItems}
-                                        setOpen={setSexOpen}
-                                        setValue={setSex}
-                                        setItems={setSexItems}
-                                        disabled={!isEditing}
-                                        placeholder="Select sex"
-                                        style={{
-                                            marginTop: 4,
-                                            backgroundColor: isEditing
-                                                ? "#fff"
-                                                : "#eee",
-                                            borderColor: errors.sex
-                                                ? "red"
-                                                : "#ccc",
-                                        }}
-                                        dropDownContainerStyle={{
-                                            borderColor: errors.sex
-                                                ? "red"
-                                                : "#ccc",
-                                        }}
-                                        listMode="SCROLLVIEW"
-                                        zIndex={1000}
-                                    />
-                                    {errors.sex && (
-                                        <AppText
-                                            style={{
-                                                color: "red",
-                                                fontSize: 12,
-                                                marginTop: 4,
-                                            }}
-                                        >
-                                            {errors.sex}
-                                        </AppText>
-                                    )}
-                                </View>
-                            ) : (
-                                <LabeledInput
-                                    label="Sex"
-                                    value={sex}
-                                    setValue={setSex}
-                                    error={errors.sex}
-                                />
-                            )}
-
-                            <LabeledInput
-                                label="Height (cm)"
-                                value={height}
-                                setValue={setHeight}
-                                error={errors.height}
-                            />
-                            <LabeledInput
-                                label="Weight (kg)"
-                                value={weight}
-                                setValue={setWeight}
-                                error={errors.weight}
-                            />
-                            {isEditing ? (
-                                <View style={{ zIndex: 999, marginBottom: 20 }}>
-                                    <AppText>Body Type</AppText>
-                                    <DropDownPicker
-                                        open={bodyTypeOpen}
-                                        value={bodyType}
-                                        items={bodyTypeItems}
-                                        setOpen={setBodyTypeOpen}
-                                        setValue={setBodyType}
-                                        setItems={setBodyTypeItems}
-                                        disabled={!isEditing}
-                                        placeholder="Select body type"
-                                        style={{
-                                            marginTop: 4,
-                                            backgroundColor: isEditing
-                                                ? "#fff"
-                                                : "#eee",
-                                            borderColor: errors.bodyType
-                                                ? "red"
-                                                : "#ccc",
-                                        }}
-                                        dropDownContainerStyle={{
-                                            borderColor: errors.bodyType
-                                                ? "red"
-                                                : "#ccc",
-                                        }}
-                                        listMode="SCROLLVIEW"
-                                        zIndex={999}
-                                    />
-                                    {errors.bodyType && (
-                                        <AppText
-                                            style={{
-                                                color: "red",
-                                                fontSize: 12,
-                                                marginTop: 4,
-                                            }}
-                                        >
-                                            {errors.bodyType}
-                                        </AppText>
-                                    )}
-                                </View>
-                            ) : (
-                                <LabeledInput
-                                    label="Body Type"
-                                    value={bodyType}
-                                    setValue={setBodyType}
-                                    error={errors.bodyType}
-                                />
-                            )}
-                            <AppText style={style.bmiText}>
-                                BMI: {calculateBMI()}
-                            </AppText>
-
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between",
-                                    marginTop: 20,
-                                }}
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={style.modalOverlay}>
+                        <View style={style.modalContainer}>
+                            <ScrollView
+                                keyboardShouldPersistTaps="handled"
+                                nestedScrollEnabled
                             >
-                                <TouchableOpacity
-                                    style={style.closeButton}
-                                    onPress={() => {
-                                        setModalVisible(false);
-                                        setIsEditing(false);
+                                <LabeledInput
+                                    label="Age"
+                                    value={age}
+                                    setValue={setAge}
+                                    error={errors.age}
+                                    isEditing={isEditing}
+                                />
+
+                                {isEditing ? (
+                                    <View
+                                        style={{
+                                            zIndex: 1000,
+                                            marginBottom: 20,
+                                        }}
+                                    >
+                                        <AppText>Sex</AppText>
+                                        <DropDownPicker
+                                            open={sexOpen}
+                                            value={sex}
+                                            items={sexItems}
+                                            setOpen={setSexOpen}
+                                            setValue={setSex}
+                                            setItems={setSexItems}
+                                            disabled={!isEditing}
+                                            placeholder="Select sex"
+                                            style={{
+                                                marginTop: 4,
+                                                backgroundColor: isEditing
+                                                    ? "#fff"
+                                                    : "#eee",
+                                                borderColor: errors.sex
+                                                    ? "red"
+                                                    : "#ccc",
+                                            }}
+                                            dropDownContainerStyle={{
+                                                borderColor: errors.sex
+                                                    ? "red"
+                                                    : "#ccc",
+                                            }}
+                                            listMode="SCROLLVIEW"
+                                            zIndex={1000}
+                                        />
+                                        {errors.sex && (
+                                            <AppText
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: 12,
+                                                    marginTop: 4,
+                                                }}
+                                            >
+                                                {errors.sex}
+                                            </AppText>
+                                        )}
+                                    </View>
+                                ) : (
+                                    <LabeledInput
+                                        isEditing={false}
+                                        label="Sex"
+                                        value={sex}
+                                        setValue={setSex}
+                                        error={errors.sex}
+                                    />
+                                )}
+
+                                <LabeledInput
+                                    label="Height (cm)"
+                                    value={height}
+                                    setValue={setHeight}
+                                    error={errors.height}
+                                    isEditing={isEditing}
+                                />
+                                <LabeledInput
+                                    label="Weight (kg)"
+                                    value={weight}
+                                    setValue={setWeight}
+                                    error={errors.weight}
+                                    isEditing={isEditing}
+                                />
+                                {isEditing ? (
+                                    <View
+                                        style={{
+                                            zIndex: 999,
+                                            marginBottom: 20,
+                                        }}
+                                    >
+                                        <AppText>Body Type</AppText>
+                                        <DropDownPicker
+                                            open={bodyTypeOpen}
+                                            value={bodyType}
+                                            items={bodyTypeItems}
+                                            setOpen={setBodyTypeOpen}
+                                            setValue={setBodyType}
+                                            setItems={setBodyTypeItems}
+                                            disabled={!isEditing}
+                                            placeholder="Select body type"
+                                            style={{
+                                                marginTop: 4,
+                                                backgroundColor: isEditing
+                                                    ? "#fff"
+                                                    : "#eee",
+                                                borderColor: errors.bodyType
+                                                    ? "red"
+                                                    : "#ccc",
+                                            }}
+                                            dropDownContainerStyle={{
+                                                borderColor: errors.bodyType
+                                                    ? "red"
+                                                    : "#ccc",
+                                            }}
+                                            listMode="SCROLLVIEW"
+                                            zIndex={999}
+                                        />
+                                        {errors.bodyType && (
+                                            <AppText
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: 12,
+                                                    marginTop: 4,
+                                                }}
+                                            >
+                                                {errors.bodyType}
+                                            </AppText>
+                                        )}
+                                    </View>
+                                ) : (
+                                    <LabeledInput
+                                        isEditing={false}
+                                        label="Body Type"
+                                        value={bodyType}
+                                        setValue={setBodyType}
+                                        error={errors.bodyType}
+                                    />
+                                )}
+                                <AppText style={style.bmiText}>
+                                    BMI: {calculateBMI()}
+                                </AppText>
+
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        marginTop: 20,
                                     }}
                                 >
-                                    <AppText style={{ color: "#fff" }}>
-                                        Close
-                                    </AppText>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[
-                                        style.closeButton,
-                                        { backgroundColor: "#2e8b57" },
-                                    ]}
-                                    onPress={() => {
-                                        if (isEditing) {
-                                            if (validateInputs()) {
-                                                saveToDB({
-                                                    age: age,
-                                                    sex: sex,
-                                                    height: height,
-                                                    weight: weight,
-                                                    body_type: bodyType,
-                                                });
-                                                setIsEditing(false);
-                                            }
-                                        } else {
-                                            setIsEditing(true);
-                                        }
-                                    }}
-                                >
-                                    <AppText style={{ color: "#fff" }}>
-                                        {isEditing ? "Save" : "Edit"}
-                                    </AppText>
-                                </TouchableOpacity>
-                            </View>
-                        </ScrollView>
+                                    <TouchableOpacity
+                                        style={style.closeButton}
+                                        onPress={() => {
+                                            setModalVisible(false);
+                                            setIsEditing(false);
+                                        }}
+                                    >
+                                        <AppText style={{ color: "#fff" }}>
+                                            Close
+                                        </AppText>
+                                    </TouchableOpacity>
+                                    {!infoInDatabase && (
+                                        <TouchableOpacity
+                                            style={[
+                                                style.closeButton,
+                                                { backgroundColor: "#2e8b57" },
+                                            ]}
+                                            onPress={async () => {
+                                                if (isEditing) {
+                                                    if (validateInputs()) {
+                                                        const response =
+                                                            await api.savePhysicalInfoToDB(
+                                                                {
+                                                                    age: Number(
+                                                                        age
+                                                                    ),
+                                                                    sex: sex,
+                                                                    height: Number(
+                                                                        height
+                                                                    ),
+                                                                    weight: Number(
+                                                                        weight
+                                                                    ),
+                                                                    body_type:
+                                                                        bodyType,
+                                                                }
+                                                            );
+                                                        setIsEditing(false);
+                                                    }
+                                                } else {
+                                                    setIsEditing(true);
+                                                }
+                                            }}
+                                        >
+                                            <AppText style={{ color: "#fff" }}>
+                                                {isEditing ? "Save" : "Edit"}
+                                            </AppText>
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                            </ScrollView>
+                        </View>
                     </View>
-                </View>
+                </TouchableWithoutFeedback>
             </Modal>
         </View>
     );

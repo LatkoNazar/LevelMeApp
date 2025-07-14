@@ -6,7 +6,11 @@ import AppText from "../../../../components/AppText.js";
 import themes from "../../../../design/themes.js";
 import { useSelector } from "react-redux";
 
+import { createProfileClient } from "../../../../api/profileClient.js";
+
 export default function GeneratedContent(props) {
+    const api = createProfileClient();
+
     const navigation = useNavigation();
     const route = useRoute();
     const { generatedContent } = route.params || {};
@@ -17,18 +21,7 @@ export default function GeneratedContent(props) {
 
     async function getGeneratedContent(id) {
         try {
-            const response = await fetch(
-                `${config.BACKEND_URL}/user-data/generated-content/get-content`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ id: id }),
-                }
-            );
-            const content = await response.json();
+            const content = await api.getGeneratedContent();
             return content;
         } catch (error) {
             console.error("Error sending generated exercises:", error);

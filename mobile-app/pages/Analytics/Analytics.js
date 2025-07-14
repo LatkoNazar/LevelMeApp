@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import themes from "../../design/themes";
 import { useEffect, useState } from "react";
 import AppText from "../../components/AppText";
-import AnalyticsSectionButton from "../../components/AnalyticsSectionButton";
+import AnalyticsSectionButton from "../../components/buttons/AnalyticsSectionButton";
 import { useNavigation } from "@react-navigation/native";
 
 import WeightTracker from "./Sections/WeightTracker";

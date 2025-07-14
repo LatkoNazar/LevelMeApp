@@ -1,5 +1,5 @@
 ﻿import { View, ScrollView, StyleSheet } from "react-native";
-import OptionCard from "../../components/OptionCard";
+import OptionCard from "../../components/cards/OptionCard";
 import ExercisesMusclesCategoryAssets from "../../assets/generated_objects/ExercisesMusclesCategoryAssets";
 import { useNavigation } from "@react-navigation/native";
 

@@ -27,9 +27,11 @@ import { useSelector } from "react-redux";
 import themes from "../../design/themes";
 
 // AUTH
-import { SignUp } from "../../api/authAPI";
+import { authClient } from "../../api/authClient";
 
 export default function SignUpPage() {
+    const api = authClient();
+
     const headerHeight = useHeaderHeight();
     const navigation = useNavigation();
     const [firstName, setFirstName] = useState("");
@@ -56,7 +58,7 @@ export default function SignUpPage() {
                 first_name: firstName,
                 last_name: lastName,
             };
-            const response = await SignUp(userData);
+            const response = await api.SignUp(userData);
             const data = await response.json();
             if (response.ok) {
                 Alert.alert("Success", "Account created!");

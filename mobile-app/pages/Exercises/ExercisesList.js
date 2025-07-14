@@ -6,9 +6,8 @@ import {
     ActivityIndicator,
     View,
 } from "react-native";
-import PropTypes from "prop-types";
-import ExerciseCard from "../../components/ExerciseCard.js";
-import { getAllExercises } from "../../api/exercisesRetrieval.js";
+import ExerciseCard from "../../components/cards/ExerciseCard.js";
+import { createExerciseRetrievalClient } from "../../api/exercisesRetrievalClient.js";
 import CurveLine from "../../design/backgrounds/CurveLine.js";
 import themes from "../../design/themes";
 import { useSelector } from "react-redux";
@@ -24,6 +23,8 @@ export default function ExercisesList({ route }) {
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
 
+    const api = createExerciseRetrievalClient();
+
     useEffect(() => {
         fetchExercises(page);
     }, []);
@@ -33,7 +34,7 @@ export default function ExercisesList({ route }) {
 
         try {
             setLoading(true);
-            const data = await getAllExercises(category, currentPage, 50);
+            const data = await api.getAllExercises(category, currentPage, 50);
 
             if (data.exercises.length === 0) {
                 setHasMore(false);

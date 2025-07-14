@@ -17,7 +17,9 @@ import {
 } from "react-native";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { getAnswerWS, handleNewChat } from "../../api/chatbotInteraction";
+
+import { createChatbotClient } from "../../api/chatbotClient";
+
 import { getMarkdownStyles, styles } from "./AssistantStyle";
 import config from "../../config";
 import IconCounter from "../../components/IconCounter";
@@ -29,7 +31,6 @@ import CurveLine from "../../design/backgrounds/CurveLine";
 
 const MessageBubble = ({ text, isUser, style }) => {
     const textColor = isUser ? "#27374D" : "#DDE6ED";
-
     return (
         <View
             style={[
@@ -43,10 +44,9 @@ const MessageBubble = ({ text, isUser, style }) => {
 };
 
 export default function Assistant() {
-    const navigation = useNavigation();
+    const api = createChatbotClient();
 
-    const generateId = () =>
-        Date.now().toString() + Math.random().toString(36).substring(2, 6);
+    const navigation = useNavigation();
 
     const headerHeight = useHeaderHeight();
     const [inputText, setInputText] = useState("");
@@ -57,12 +57,16 @@ export default function Assistant() {
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
 
+    function generateId() {
+        return Date.now().toString() + Math.random().toString(36).slice(2, 6);
+    }
+
     function handleInputChange(text) {
         setInputText(text);
     }
 
     const handleResetChat = async () => {
-        await handleNewChat();
+        await api.handleNewChat();
         setInputText("");
         setMessagesList([]);
     };
@@ -87,7 +91,7 @@ export default function Assistant() {
         setInputText("");
 
         // Start WebSocket
-        getAnswerWS(
+        api.getAnswerWS(
             inputText,
             (chunk) => {
                 setMessagesList((prev) =>

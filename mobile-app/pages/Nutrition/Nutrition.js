@@ -10,7 +10,7 @@ export default function Nutrition() {
     const style = styles(theme);
     return (
         <View style={style.main}>
-            <AppText>Nutrition</AppText>
+            <AppText>In dev...</AppText>
         </View>
     );
 }

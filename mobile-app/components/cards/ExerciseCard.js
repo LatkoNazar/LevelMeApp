@@ -1,7 +1,7 @@
 ﻿import { View, StyleSheet } from "react-native";
-import AppText from "./AppText";
+import AppText from "../AppText";
 
-import themes from "../design/themes";
+import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 export default function ExerciseCard(props) {

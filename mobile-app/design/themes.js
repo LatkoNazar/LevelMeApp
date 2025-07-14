@@ -19,6 +19,13 @@
             borderColor: "#DDE6ED",
             activeFillColor: "#27374D",
         },
+        Tooltip: {
+            textColor: "#000000",
+            fillColor: "gray",
+            borderColor: "#000000",
+            closeTextColor: "white",
+        },
+        DailyHealthEntryButton: { textColor: "#DDE6ED", fillColor: "#9DB2BF" },
         WeightTracker: {
             titleColor: "#DDE6ED",
         },
@@ -124,6 +131,13 @@
             borderColor: "black",
             activeFillColor: "black",
         },
+        Tooltip: {
+            textColor: "#000000",
+            fillColor: "gray",
+            borderColor: "#000000",
+            closeTextColor: "white",
+        },
+        DailyHealthEntryButton: { textColor: "white", fillColor: "black" },
         WeightTracker: {
             titleColor: "black",
         },

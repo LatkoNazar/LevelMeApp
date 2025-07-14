@@ -1,7 +1,7 @@
-﻿import AppText from "./AppText";
+﻿import AppText from "../AppText";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 
-import themes from "../design/themes";
+import themes from "../../design/themes";
 import { useSelector } from "react-redux";
 
 export default function OptionCard(props) {

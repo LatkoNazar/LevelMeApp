@@ -4,7 +4,7 @@ import { useLayoutEffect } from "react";
 import AppText from "../../components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import ExpandableContainer from "../../components/ExpandableContainer";
-import ExerciseCard from "../../components/ExerciseCard";
+import ExerciseCard from "../../components/cards/ExerciseCard";
 
 import themes from "../../design/themes";
 import { config } from "../../config";

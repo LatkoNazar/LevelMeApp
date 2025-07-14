@@ -1,8 +1,8 @@
 ﻿import { useState } from "react";
 import { View, StyleSheet, FlatList, ScrollView } from "react-native";
 import TaskToDo from "../../components/TaskToDo.js";
-import AddTaskButton from "../../components/AddTaskButton.js";
-import ClearTasks from "../../components/ClearTasks.js";
+import AddTaskButton from "../../components/buttons/AddTaskButton.js";
+import ClearTasksButton from "../../components/buttons/ClearTasksButton.js";
 import AppText from "../../components/AppText.js";
 
 import themes from "../../design/themes.js";
@@ -105,7 +105,7 @@ export default function DailyRoutine() {
                     onAddTask={handleAddTask}
                     style={style.customButton}
                 />
-                <ClearTasks
+                <ClearTasksButton
                     onClearTask={handleClearList}
                     style={style.customButton}
                 />

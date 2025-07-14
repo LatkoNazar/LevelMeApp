@@ -19,6 +19,8 @@ import { config } from "../../../config.js";
 import { useNavigation } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/elements";
 
+import { createYourPlansClient } from "../../../api/createYourPlansClient.js";
+
 const nutritionGoals = [
     "Weight Loss",
     "Muscle Gain",
@@ -29,6 +31,8 @@ const nutritionGoals = [
 ];
 
 export default function GenerateNutritionPlan() {
+    const api = createYourPlansClient();
+
     const headerHeight = useHeaderHeight();
     const navigation = useNavigation();
     const currentThemeName = useSelector((state) => state.theme.mode);
@@ -50,21 +54,7 @@ export default function GenerateNutritionPlan() {
         }
 
         try {
-            const response = await fetch(
-                `${config.BACKEND_URL}/generators/generate-nutrition-plan`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        available_products: productsInput,
-                        allergies_list: allergiesInput,
-                        goal: goal,
-                        additional_notes: customNotes,
-                    }),
-                }
-            );
-
-            const data = await response.json();
+            const data = api.generateNutritionPlan();
             navigation.navigate("Your Generated Result", {
                 title: "Nutrition Plan",
                 content: data.plan,

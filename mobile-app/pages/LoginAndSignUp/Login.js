@@ -4,9 +4,6 @@ import AppText from "../../components/AppText";
 // TOKENS
 import { saveUserToken } from "./tokenOperations";
 
-// CONFIG
-import { config } from "../../config";
-
 // REACT || REACT-NATIVE
 import React, { useState } from "react";
 import {
@@ -33,12 +30,14 @@ import { useReducer } from "react";
 import themes from "../../design/themes";
 
 // AUTH
-import { Login } from "../../api/authAPI";
+import { authClient } from "../../api/authClient";
 
 import { loginSuccess } from "../../redux/authSlice";
 
 export default function LoginPage() {
     const dispatch = useDispatch();
+
+    const api = authClient();
 
     const headerHeight = useHeaderHeight();
     const navigation = useNavigation();
@@ -60,7 +59,7 @@ export default function LoginPage() {
                 password: password,
                 device_info: Device.modelName,
             };
-            const response = await Login(userData);
+            const response = await api.Login(userData);
             const data = await response.json();
             if (response.ok) {
                 Alert.alert("Success", "Logged in!");

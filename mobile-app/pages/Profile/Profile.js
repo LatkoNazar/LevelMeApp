@@ -1,6 +1,6 @@
 ﻿import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import AppText from "../../components/AppText";
-import SectionButton from "../../components/SectionButton";
+import SectionButton from "../../components/buttons/SectionButton";
 
 import themes from "../../design/themes";
 import { useSelector } from "react-redux";
@@ -9,60 +9,36 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { config } from "../../config";
 
-import { getGeneratedContentTitles } from "../../api/profileInteraction";
+import { createProfileClient } from "../../api/profileClient";
 
 import CurveLine from "../../design/backgrounds/CurveLine";
 
 export default function Profile() {
-    const token = useSelector((state) => state.auth.token);
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
     const [userData, setUserData] = useState();
-    const [generatedContent, setGeneratedContent] = useState();
     const navigation = useNavigation();
 
-    async function getGeneratedContentTitles() {
-        const response = await fetch(
-            `${config.BACKEND_URL}/user-data/generated-content`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setGeneratedContent(data);
-        return data;
-    }
+    const token = useSelector((state) => state.auth.token);
+    const api = createProfileClient(token);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(
-                    `${config.BACKEND_URL}/user-data/get-profile-data`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                const data = await response.json();
-                setUserData(data);
-            } catch (error) {
-                console.error("Failed to fetch profile data", error);
+                const profile = await api.fetchEmailFirstLastNameData();
+                setUserData(profile);
+            } catch (e) {
+                console.error("Error:", e);
             }
         };
 
         fetchData();
     }, []);
+
+    function getGeneratedContentTitles() {
+        return api.getGeneratedContentTitles();
+    }
 
     return (
         <View style={style.main}>
@@ -103,8 +79,7 @@ export default function Profile() {
                     iconName={"library-outline"}
                     handlePress={async () => {
                         try {
-                            const data = await getGeneratedContentTitles(token);
-                            setGeneratedContent(data);
+                            const data = await getGeneratedContentTitles();
                             navigation.navigate("Generated Content", {
                                 generatedContent: data,
                             });

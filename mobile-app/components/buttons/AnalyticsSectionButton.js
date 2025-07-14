@@ -1,9 +1,9 @@
 ﻿import React from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
-import AppText from "./AppText";
+import AppText from "../AppText";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import themes from "../design/themes";
+import themes from "../../design/themes";
 import { Weight } from "lucide-react-native";
 
 export default function AnalyticsSectionButton({

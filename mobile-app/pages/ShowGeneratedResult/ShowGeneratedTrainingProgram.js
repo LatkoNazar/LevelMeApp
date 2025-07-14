@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
 import ExpandableContainer from "../../components/ExpandableContainer";
-import ExerciseCard from "../../components/ExerciseCard";
+import ExerciseCard from "../../components/cards/ExerciseCard";
 
 export default function ShowGeneratedTrainingProgram({
     content,
