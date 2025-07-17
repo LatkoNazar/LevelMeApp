@@ -16,7 +16,7 @@ import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { config } from "../../../../config";
 
-import { createProfileClient } from "../../../../api/profileClient";
+import { createUserClient } from "../../../../api/userClient";
 
 const LabeledInput = ({ label, value, setValue, error, isEditing }) => (
     <View style={{ marginBottom: 10, zIndex: 0 }}>
@@ -46,7 +46,7 @@ const LabeledInput = ({ label, value, setValue, error, isEditing }) => (
 
 export default function UserInfoPage() {
     const token = useSelector((state) => state.auth.token);
-    const api = createProfileClient(token);
+    const api = createUserClient(token);
 
     const [infoInDatabase, setInfoInDatabase] = useState(false);
 

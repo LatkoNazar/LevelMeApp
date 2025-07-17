@@ -1,4 +1,6 @@
-﻿from fastapi import APIRouter, Depends, Request
+﻿import json
+
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,8 +15,10 @@ from typing import Dict, List
 from ORM.users_table import UsersTable
 from ORM.generated_plans import GeneratedPlans
 from ORM.physical_info import PhysicalInfo
+from ORM.activity_dates import ActivityDates
+from ORM.health_entries import HealthEntries
 from schemas.training_plan_schema import PlanRequest
-from schemas.user_schema import PhysicalInfoSchema
+from schemas.user_schema import PhysicalInfoSchema, DailyHealthEntrySchema
 
 router = APIRouter(prefix="/user-data")
 
@@ -46,7 +50,6 @@ async def get_generated_content(request: Request, db: AsyncSession = Depends(get
         }
         for row in training_plans
     ]
-
 
 @router.post("/generated-content/get-content")
 async def get_content(data: PlanRequest, db: AsyncSession = Depends(get_db)):
@@ -85,3 +88,46 @@ async def check_physical_info(request: Request, db: AsyncSession = Depends(get_d
     if not physical_info_result:
         return {"result": 0, "physical_info": None}
     return {"result": 1, "physical_info": physical_info_result}
+
+@router.post("/info/save-daily-health-entry")
+async def save_daily_health_entry(request: Request, data: DailyHealthEntrySchema, db: AsyncSession = Depends(get_db)):
+    encoded_jwt = get_token(request=request)
+    health_entry = HealthEntries(
+        user_id = encoded_jwt["id"],
+        weight = data.weight,
+        bed_time = data.bed_time.replace(tzinfo=None),
+        wake_up = data.wake_up.replace(tzinfo=None),
+        hours_slept = data.hours_slept,
+        mood = data.mood
+    )
+    activity_date = ActivityDates(
+        user_id = encoded_jwt["id"],
+        date = data.wake_up.replace(tzinfo=None)
+    )
+    db.add(health_entry)
+    await db.commit()
+    db.add(activity_date)
+    await db.commit()
+    return {"message": "Health Entry was added successfully"}
+
+@router.get("/info/get-user-activity-dates")
+async def get_user_activity_dates(request: Request, db: AsyncSession = Depends(get_db)):
+    encoded_jwt = get_token(request=request)
+    stmt = select(ActivityDates).where(ActivityDates.user_id == encoded_jwt["id"])
+    result = await db.execute(stmt)
+    activity_dates = result.scalars().all()
+    activity_dates_dicts = [{"date": a_date.date.strftime('%Y-%m-%d')} for a_date in activity_dates]
+    activity_dates_list = [item["date"] for item in activity_dates_dicts]
+    return {
+        "dates" : json.dumps(activity_dates_list)
+    }
+
+@router.get("/info/get-user-last-activity-date")
+async def get_user_activity_dates(request: Request, db: AsyncSession = Depends(get_db)):
+    encoded_jwt = get_token(request=request)
+    stmt = select(ActivityDates).where(ActivityDates.user_id == encoded_jwt["id"]).order_by(ActivityDates.date.desc())
+    result = await db.execute(stmt)
+    activity_date_row = result.scalars().first()
+    return {
+        "date" : activity_date_row.date.strftime('%Y-%m-%d')
+    }

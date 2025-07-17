@@ -42,6 +42,16 @@ export default function MoodTracker() {
     const lastMoodEntry = [...moodData].reverse().find((d) => d.mood !== null);
     const currentMood = lastMoodEntry ? lastMoodEntry.mood : 0;
     const moodPercentage = (currentMood / 10) * 100;
+
+    const validMoods = moodData
+        .filter((d) => d.mood !== null)
+        .map((d) => d.mood);
+    const avgMood = validMoods.length
+        ? (
+              validMoods.reduce((sum, val) => sum + val, 0) / validMoods.length
+          ).toFixed(2)
+        : "No data";
+
     return (
         <View style={style.mainContainer}>
             <View style={{ alignItems: "center" }}>
@@ -60,6 +70,11 @@ export default function MoodTracker() {
                     </View>
                     <AppText>Good</AppText>
                 </View>
+            </View>
+            <View style={{ marginTop: 20 }}>
+                <AppText style={{ fontSize: 18, fontWeight: "bold" }}>
+                    Average Mood: {avgMood}
+                </AppText>
             </View>
             <View style={style.tableContainer}>
                 <AppText style={style.title}>History</AppText>

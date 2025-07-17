@@ -1,6 +1,6 @@
 ﻿import { config } from "../config";
 
-export function createProfileClient(token) {
+export function createUserClient(token) {
     const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -75,6 +75,55 @@ export function createProfileClient(token) {
                         weight: data.weight,
                         body_type: data.body_type,
                     }),
+                }
+            );
+            return response.json();
+        },
+
+        async getUserActivityDates() {
+            const response = await fetch(
+                `${config.BACKEND_URL}/user-data/info/get-user-activity-dates`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            return response.json();
+        },
+
+        async saveDailyHealthEntry(data) {
+            const response = await fetch(
+                `${config.BACKEND_URL}/user-data/info/save-daily-health-entry`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        weight: data.weight,
+                        bed_time: data.bed_time,
+                        wake_up: data.wake_up,
+                        mood: data.mood,
+                        hours_slept: data.hours_slept,
+                    }),
+                }
+            );
+            return response;
+        },
+
+        async getLastActivityDate() {
+            const response = await fetch(
+                `${config.BACKEND_URL}/user-data/info/get-user-last-activity-date`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
             return response.json();

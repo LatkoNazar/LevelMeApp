@@ -11,7 +11,14 @@ export default function DailyHealthEntryButton(props) {
     return (
         <View style={style.main}>
             <TouchableOpacity
-                style={style.enterData}
+                disabled={props.disabled}
+                style={[
+                    style.enterData,
+                    props.disabled && {
+                        backgroundColor:
+                            theme.DailyHealthEntryButton.disabledColor,
+                    },
+                ]}
                 onPress={props.handlePress}
             >
                 <AppText style={style.buttonText}>Enter Data</AppText>

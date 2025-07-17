@@ -2,10 +2,15 @@
 import { ContributionGraph } from "react-native-chart-kit";
 import themes from "../../../design/themes";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AppText from "../../../components/AppText";
+import config from "../../../config";
+import { createUserClient } from "../../../api/userClient";
 
 export default function UsersContributionGraph() {
+    const token = useSelector((state) => state.auth.token);
+    const api = createUserClient(token);
+
     const screenWidth = Dimensions.get("window").width;
     const horizontalPadding = 10 * 2;
     const chartWidth = screenWidth - horizontalPadding;
@@ -15,15 +20,19 @@ export default function UsersContributionGraph() {
     const theme = themes[currentTheme] || themes.standard;
     const style = styles(theme);
 
-    const format = (date) => date.toISOString().split("T")[0];
+    const [activityDates, setActivityDates] = useState([]);
 
-    const activeDates = [
-        format(new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)),
-        format(new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)),
-        format(new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)),
-    ];
-
-    const commitsData = [];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await api.getUserActivityDates();
+                setActivityDates(data.dates || []);
+            } catch (error) {
+                console.error("Failed to fetch activity dates:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const endDate = new Date();
     const startDate = new Date();
@@ -32,17 +41,21 @@ export default function UsersContributionGraph() {
     const diffTime = Math.abs(endDate - startDate);
     const numDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    for (
-        let d = new Date(startDate);
-        d <= endDate;
-        d.setDate(d.getDate() + 1)
-    ) {
-        const isoDate = d.toISOString().split("T")[0];
-        commitsData.push({
-            date: isoDate,
-            count: activeDates.includes(isoDate) ? 1 : 0,
-        });
-    }
+    const commitsData = useMemo(() => {
+        const data = [];
+        for (
+            let d = new Date(startDate);
+            d <= endDate;
+            d.setDate(d.getDate() + 1)
+        ) {
+            const isoDate = d.toISOString().split("T")[0];
+            data.push({
+                date: isoDate,
+                count: activityDates.includes(isoDate) ? 1 : 0,
+            });
+        }
+        return data;
+    }, [activityDates]);
 
     const [selectedDay, setSelectedDay] = useState(null);
 
@@ -75,10 +88,14 @@ export default function UsersContributionGraph() {
                 height={chartHeight}
                 squareSize={25}
                 chartConfig={{
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    color: (opacity) => `rgba(0, 0, 0, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    backgroundGradientFrom:
+                        theme.contributionGraph.backgroundColor,
+                    backgroundGradientTo:
+                        theme.contributionGraph.backgroundColor,
+                    color: (opacity) =>
+                        `rgba(${theme.contributionGraph.color}, ${opacity})`,
+                    labelColor: (opacity = 1) =>
+                        `rgba(${theme.contributionGraph.labelColor}, ${opacity})`,
                 }}
                 style={{
                     borderRadius: 15,

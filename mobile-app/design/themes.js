@@ -10,8 +10,8 @@
             fillColor: "#27374D",
         },
         quoteStyle: {
-            textColor: "#DDE6ED",
-            fillColor: "#27374D",
+            textColor: "black",
+            fillColor: "black",
         },
         AnalyticsSectionButton: {
             textColor: "#DDE6ED",
@@ -25,7 +25,11 @@
             borderColor: "#000000",
             closeTextColor: "white",
         },
-        DailyHealthEntryButton: { textColor: "#DDE6ED", fillColor: "#9DB2BF" },
+        DailyHealthEntryButton: {
+            textColor: "#DDE6ED",
+            fillColor: "#9DB2BF",
+            disabledColor: "gray",
+        },
         WeightTracker: {
             titleColor: "#DDE6ED",
         },
@@ -109,6 +113,42 @@
         MoodTracker: {
             moodScaleColor: "#27374D",
         },
+        DailyHealthEntry: {
+            Slider: {
+                minimumTrackTintColor: "#27374D",
+                maximumTrackTintColor: "#9DB2BF",
+            },
+            Ionicons: {
+                color: "black",
+            },
+            navButton: {
+                shadowColor: "#000",
+                backgroundColor: "#9DB2BF",
+            },
+            step: {
+                backgroundColor: "#526D82",
+            },
+            main: {
+                backgroundColor: "#526D82",
+            },
+            weightPicker: {
+                backgroundColor: "#526D82",
+            },
+            dateTimePicker: {
+                textColor: "#9DB2BF",
+            },
+            signsColor: {
+                color: "#9DB2BF",
+            },
+            label: {
+                color: "#27374D",
+            },
+        },
+        contributionGraph: {
+            backgroundColor: "#526D82",
+            color: "0, 0, 0",
+            labelColor: "0, 0, 0",
+        },
     },
 
     blackAndWhite: {
@@ -122,7 +162,7 @@
             fillColor: "black",
         },
         quoteStyle: {
-            textColor: "white",
+            textColor: "black",
             fillColor: "black",
         },
         AnalyticsSectionButton: {
@@ -137,7 +177,11 @@
             borderColor: "#000000",
             closeTextColor: "white",
         },
-        DailyHealthEntryButton: { textColor: "white", fillColor: "black" },
+        DailyHealthEntryButton: {
+            textColor: "white",
+            fillColor: "black",
+            disabledColor: "gray",
+        },
         WeightTracker: {
             titleColor: "black",
         },
@@ -222,6 +266,42 @@
         },
         MoodTracker: {
             moodScaleColor: "black",
+        },
+        DailyHealthEntry: {
+            Slider: {
+                minimumTrackTintColor: "black",
+                maximumTrackTintColor: "gray",
+            },
+            Ionicons: {
+                color: "black",
+            },
+            navButton: {
+                shadowColor: "#000",
+                backgroundColor: "#ccc",
+            },
+            step: {
+                backgroundColor: "white",
+            },
+            main: {
+                backgroundColor: "white",
+            },
+            weightPicker: {
+                backgroundColor: "#ffffff",
+            },
+            dateTimePicker: {
+                textColor: "black",
+            },
+            signsColor: {
+                color: "black",
+            },
+            label: {
+                color: "black",
+            },
+        },
+        contributionGraph: {
+            backgroundColor: "white",
+            color: "0, 0, 0",
+            labelColor: "0, 0, 0",
         },
     },
 };

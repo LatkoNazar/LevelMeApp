@@ -7,13 +7,18 @@
     FlatList,
     TouchableOpacity,
     Dimensions,
+    Alert,
 } from "react-native";
 import { useSelector } from "react-redux";
 import themes from "../../design/themes";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppText from "../../components/AppText";
 import { useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import WheelPickerExpo from "react-native-wheel-picker-expo";
+import { Ionicons } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
+import { createUserClient } from "../../api/userClient";
 
 const weightValues = Array.from({ length: 1101 }, (_, i) =>
     (30 + i * 0.1).toFixed(1)
@@ -21,6 +26,11 @@ const weightValues = Array.from({ length: 1101 }, (_, i) =>
 const { width } = Dimensions.get("window");
 
 export default function DailyHealthEntry() {
+    const token = useSelector((state) => state.auth.token);
+    const api = createUserClient(token);
+
+    const navigation = useNavigation();
+
     const currentThemeName = useSelector((state) => state.theme.mode);
     const theme = themes[currentThemeName] || themes.standard;
     const style = styles(theme);
@@ -34,18 +44,34 @@ export default function DailyHealthEntry() {
 
     const steps = ["weight", "bedTime", "wakeUpTime", "mood"];
 
-    function handleDone() {
+    async function handleDone() {
         let adjustedBedTime = bedTime;
         if (wakeUpTime && bedTime && wakeUpTime - bedTime < 0) {
             adjustedBedTime = new Date(bedTime);
             adjustedBedTime.setDate(adjustedBedTime.getDate() - 1);
         }
         const hoursSlept = (wakeUpTime - adjustedBedTime) / (1000 * 60 * 60);
-        console.log(
-            `RESULT => weight: ${weight}. WakeUp day: ${wakeUpTime.toLocaleDateString()}. You sleep: ${hoursSlept.toFixed(
-                2
-            )} hours. mood: ${mood}`
+
+        const response = await api.saveDailyHealthEntry({
+            weight: Number(weight),
+            bed_time: formatDateTime(adjustedBedTime),
+            wake_up: formatDateTime(wakeUpTime),
+            mood: Number(mood).toFixed(2),
+            hours_slept: Number(hoursSlept),
+        });
+        if (response.ok) {
+            Alert.alert("Success");
+            navigation.goBack();
+        } else {
+            Alert.alert("Error", `Status: ${response.status}\n${errorText}`);
+        }
+    }
+
+    function formatDateTime(date) {
+        const local = new Date(
+            date.getTime() - date.getTimezoneOffset() * 60000
         );
+        return local.toISOString();
     }
 
     function handleScrollToPrevious() {
@@ -79,8 +105,8 @@ export default function DailyHealthEntry() {
                             Select your weight (kg):
                         </AppText>
                         <WheelPickerExpo
-                            height={300}
-                            width={150}
+                            height={250}
+                            width={100}
                             initialSelectedIndex={40}
                             items={weightValues.map((w) => ({
                                 label: w,
@@ -89,15 +115,32 @@ export default function DailyHealthEntry() {
                             onChange={({ item }) => {
                                 setWeight(item.value);
                             }}
+                            backgroundColor={
+                                theme.DailyHealthEntry.weightPicker
+                                    .backgroundColor
+                            }
                         />
-                        {weight && (
-                            <TouchableOpacity
-                                onPress={handleScrollToNext}
-                                style={style.next}
-                            >
-                                <AppText>➔</AppText>
-                            </TouchableOpacity>
-                        )}
+                        <View style={style.NextPrevious}>
+                            <View style={{ alignSelf: "flex-start" }}></View>
+                            {weight && (
+                                <TouchableOpacity
+                                    onPress={handleScrollToNext}
+                                    style={[
+                                        style.navButton,
+                                        { alignSelf: "flex-end" },
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name="arrow-forward"
+                                        size={25}
+                                        color={
+                                            theme.DailyHealthEntry.Ionicons
+                                                .color
+                                        }
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     </View>
                 );
             case "bedTime":
@@ -114,15 +157,47 @@ export default function DailyHealthEntry() {
                             }
                             is24Hour={true}
                             onChange={handleTimeChange(setBedTime)}
+                            textColor={
+                                theme.DailyHealthEntry.dateTimePicker.textColor
+                            }
                         />
-                        {bedTime && (
+                        <View style={style.NextPrevious}>
                             <TouchableOpacity
-                                onPress={handleScrollToNext}
-                                style={style.next}
+                                onPress={handleScrollToPrevious}
+                                style={[
+                                    style.navButton,
+                                    { alignSelf: "flex-start" },
+                                ]}
                             >
-                                <AppText>➔</AppText>
+                                <Ionicons
+                                    name="arrow-back"
+                                    size={25}
+                                    color={
+                                        theme.DailyHealthEntry.Ionicons.color
+                                    }
+                                />
                             </TouchableOpacity>
-                        )}
+                            <View>
+                                {bedTime && (
+                                    <TouchableOpacity
+                                        onPress={handleScrollToNext}
+                                        style={[
+                                            style.navButton,
+                                            { alignSelf: "flex-end" },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name="arrow-forward"
+                                            size={25}
+                                            color={
+                                                theme.DailyHealthEntry.Ionicons
+                                                    .color
+                                            }
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
                     </View>
                 );
             case "wakeUpTime":
@@ -139,39 +214,104 @@ export default function DailyHealthEntry() {
                             }
                             is24Hour={true}
                             onChange={handleTimeChange(setWakeUpTime)}
+                            textColor={
+                                theme.DailyHealthEntry.dateTimePicker.textColor
+                            }
                         />
-                        {wakeUpTime && (
+                        <View style={style.NextPrevious}>
                             <TouchableOpacity
-                                onPress={handleScrollToNext}
-                                style={style.next}
+                                onPress={handleScrollToPrevious}
+                                style={[
+                                    style.navButton,
+                                    { alignSelf: "flex-start" },
+                                ]}
                             >
-                                <AppText>➔</AppText>
+                                <Ionicons
+                                    name="arrow-back"
+                                    size={25}
+                                    color={
+                                        theme.DailyHealthEntry.Ionicons.color
+                                    }
+                                />
                             </TouchableOpacity>
-                        )}
+                            {wakeUpTime && (
+                                <TouchableOpacity
+                                    onPress={handleScrollToNext}
+                                    style={[
+                                        style.navButton,
+                                        { alignSelf: "flex-end" },
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name="arrow-forward"
+                                        size={25}
+                                        color={
+                                            theme.DailyHealthEntry.Ionicons
+                                                .color
+                                        }
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     </View>
                 );
             case "mood":
                 return (
                     <View style={style.step}>
                         <AppText style={style.label}>Mood (1-10):</AppText>
-                        <TextInput
-                            style={style.input}
-                            keyboardType="numeric"
-                            maxLength={2}
-                            placeholder="Enter mood"
-                            onChangeText={(text) => {
-                                setMood(text);
-                            }}
-                            value={mood}
+                        <Slider
+                            style={{ width: "100%", height: 40 }}
+                            minimumValue={1}
+                            maximumValue={10}
+                            step={1}
+                            value={mood ? Number(mood) : 5}
+                            onValueChange={(value) => setMood(String(value))}
+                            minimumTrackTintColor={
+                                theme.DailyHealthEntry.Slider
+                                    .minimumTrackTintColor
+                            }
+                            maximumTrackTintColor={
+                                theme.DailyHealthEntry.Slider
+                                    .maximumTrackTintColor
+                            }
                         />
-                        {mood && (
-                            <TouchableOpacity
-                                onPress={handleDone}
-                                style={style.next}
-                            >
-                                <AppText>Done</AppText>
-                            </TouchableOpacity>
-                        )}
+                        <AppText style={{ marginTop: 10, fontSize: 18 }}>
+                            Mood: {mood || 5}
+                        </AppText>
+                        <View style={style.NextPrevious}>
+                            <View style={{ flex: 1, alignItems: "flex-start" }}>
+                                <TouchableOpacity
+                                    onPress={handleScrollToPrevious}
+                                    style={style.navButton}
+                                >
+                                    <Ionicons
+                                        name="arrow-back"
+                                        size={25}
+                                        color={
+                                            theme.DailyHealthEntry.Ionicons
+                                                .color
+                                        }
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flex: 1, alignItems: "flex-end" }}>
+                                {mood && (
+                                    <TouchableOpacity
+                                        onPress={handleDone}
+                                        style={style.navButton}
+                                    >
+                                        <Ionicons
+                                            name="send"
+                                            size={25}
+                                            color={
+                                                theme.DailyHealthEntry.Ionicons
+                                                    .color
+                                            }
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
                     </View>
                 );
             default:
@@ -192,10 +332,30 @@ export default function DailyHealthEntry() {
                         <View key={step} style={style.indicator}>
                             <AppText
                                 style={{
-                                    fontSize: 24,
+                                    fontSize: 30,
+                                    color: theme.DailyHealthEntry.signsColor
+                                        .color,
                                 }}
                             >
-                                {completed ? "✔" : "○"}
+                                {completed ? (
+                                    <Ionicons
+                                        name="checkmark-done"
+                                        size={30}
+                                        color={
+                                            theme.DailyHealthEntry.signsColor
+                                                .color
+                                        }
+                                    />
+                                ) : (
+                                    <Ionicons
+                                        name="ellipse-outline"
+                                        size={20}
+                                        color={
+                                            theme.DailyHealthEntry.signsColor
+                                                .color
+                                        }
+                                    />
+                                )}
                             </AppText>
                         </View>
                     );
@@ -220,25 +380,48 @@ const styles = (theme) =>
         main: {
             flex: 1,
             flexDirection: "column",
+            backgroundColor: theme.DailyHealthEntry.main.backgroundColor,
         },
         step: {
             width: width,
             alignItems: "center",
             paddingHorizontal: 20,
+            backgroundColor: theme.DailyHealthEntry.step.backgroundColor,
         },
         indicatorRow: {
             flexDirection: "row",
             justifyContent: "center",
-            marginBottom: 20,
+
+            backgroundColor: "transparent",
+        },
+        indicator: {
+            margin: 15,
+            justifyContent: "center",
         },
         label: {
-            fontSize: 18,
-            marginBottom: 10,
+            fontSize: 20,
+            fontWeight: "600",
+            color: theme.DailyHealthEntry.label.color,
+            marginBottom: 20,
+            textAlign: "center",
         },
-        next: {
+        navButton: {
             marginTop: 20,
-            backgroundColor: theme.primary || "#ccc",
-            padding: 10,
-            borderRadius: 10,
+            backgroundColor: theme.DailyHealthEntry.navButton.backgroundColor,
+            paddingVertical: 12,
+            paddingHorizontal: 30,
+            borderRadius: 12,
+            shadowColor: theme.DailyHealthEntry.navButton.shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 5,
+            marginHorizontal: 10,
+        },
+        NextPrevious: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "80%",
+            marginTop: 20,
         },
     });

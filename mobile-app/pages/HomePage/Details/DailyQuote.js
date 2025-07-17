@@ -90,6 +90,7 @@ const styles = (theme) =>
         quoteText: {
             fontStyle: "italic",
             fontSize: 14,
+            color: theme.quoteStyle.textColor,
         },
         vertivalBar: {
             backgroundColor: theme.quoteStyle.fillColor,
@@ -99,8 +100,10 @@ const styles = (theme) =>
             alignItems: "flex-end",
             marginTop: 5,
             marginRight: 20,
+            marginBottom: 5,
         },
         quoteSign: {
             fontSize: 40,
+            color: theme.quoteStyle.textColor,
         },
     });

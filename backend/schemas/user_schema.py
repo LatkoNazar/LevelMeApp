@@ -1,4 +1,5 @@
 ﻿from pydantic import BaseModel
+from datetime import datetime
 
 class UserSignUpSchema(BaseModel):
     email: str
@@ -17,3 +18,10 @@ class PhysicalInfoSchema(BaseModel):
     height: float
     weight: float
     body_type: str
+
+class DailyHealthEntrySchema(BaseModel):
+    weight: float
+    bed_time: datetime
+    wake_up: datetime
+    mood: int
+    hours_slept: float

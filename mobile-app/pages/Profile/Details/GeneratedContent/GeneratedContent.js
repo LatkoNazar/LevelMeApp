@@ -6,10 +6,10 @@ import AppText from "../../../../components/AppText.js";
 import themes from "../../../../design/themes.js";
 import { useSelector } from "react-redux";
 
-import { createProfileClient } from "../../../../api/profileClient.js";
+import { createUserClient } from "../../../../api/userClient.js";
 
 export default function GeneratedContent(props) {
-    const api = createProfileClient();
+    const api = createUserClient();
 
     const navigation = useNavigation();
     const route = useRoute();

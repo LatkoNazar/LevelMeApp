@@ -9,7 +9,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { config } from "../../config";
 
-import { createProfileClient } from "../../api/profileClient";
+import { createUserClient } from "../../api/userClient";
 
 import CurveLine from "../../design/backgrounds/CurveLine";
 
@@ -21,7 +21,7 @@ export default function Profile() {
     const navigation = useNavigation();
 
     const token = useSelector((state) => state.auth.token);
-    const api = createProfileClient(token);
+    const api = createUserClient(token);
 
     useEffect(() => {
         const fetchData = async () => {

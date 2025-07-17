@@ -11,61 +11,57 @@ export default function SleepTracker() {
 
     const sleepData = [
         {
-            date: "2025-07-06",
-            sleepTime: "2025-07-05T23:45:00",
-            wakeTime: "2025-07-06T07:15:00",
-            rating: 8,
+            date: "2025-07-13",
+            sleepTime: "2025-07-13T02:40:00",
+            wakeTime: "2025-07-13T11:15:00",
+            timeSlept: 8.35,
         },
         {
-            date: "2025-07-07",
-            sleepTime: "2025-07-07T00:30:00",
-            wakeTime: "2025-07-07T07:00:00",
-            rating: 6,
+            date: "2025-07-14",
+            sleepTime: "2025-07-14T03:15:00",
+            wakeTime: "2025-07-14T11:30:00",
+            timeSlept: 8.22,
         },
         {
-            date: "2025-07-08",
-            sleepTime: "2025-07-07T23:00:00",
-            wakeTime: "2025-07-08T06:30:00",
-            rating: 7,
+            date: "2025-07-15",
+            sleepTime: "2025-07-15T02:25:00",
+            wakeTime: "2025-07-15T12:05:00",
+            timeSlept: 9.6,
         },
         {
-            date: "2025-07-09",
-            sleepTime: "2025-07-09T01:00:00",
-            wakeTime: "2025-07-09T08:00:00",
-            rating: 5,
+            date: "2025-07-16",
+            sleepTime: "2025-07-16T02:50:00",
+            wakeTime: "2025-07-16T10:45:00",
+            timeSlept: 7.8,
         },
         {
-            date: "2025-07-10",
-            sleepTime: "2025-07-09T22:45:00",
-            wakeTime: "2025-07-10T06:45:00",
-            rating: 9,
+            date: "2025-07-17",
+            sleepTime: "2025-07-17T03:10:00",
+            wakeTime: "2025-07-17T13:05:00",
+            timeSlept: 9.9,
         },
         {
-            date: "2025-07-11",
+            date: "2025-07-18",
             sleepTime: null,
             wakeTime: null,
-            rating: null,
+            timeSlept: null,
         },
         {
-            date: "2025-07-12",
-            sleepTime: "2025-07-12T00:00:00",
-            wakeTime: "2025-07-12T07:45:00",
-            rating: 6,
+            date: "2025-07-19",
+            sleepTime: "2025-07-19T02:35:00",
+            wakeTime: "2025-07-19T11:00:00",
+            timeSlept: 8.01,
         },
     ];
 
-    const hoursArray = sleepData
-        .filter((item) => item.sleepTime && item.wakeTime)
-        .map((item) => {
-            const sleep = new Date(item.sleepTime);
-            const wake = new Date(item.wakeTime);
-            const diff = (wake - sleep) / (1000 * 60 * 60);
-            return +diff.toFixed(2);
-        });
+    const validSleepTimes = sleepData
+        .map((entry) => entry.timeSlept)
+        .filter((val) => typeof val === "number" && !isNaN(val));
 
-    const avg = hoursArray.reduce((a, b) => a + b, 0) / hoursArray.length;
-    const min = Math.min(...hoursArray);
-    const max = Math.max(...hoursArray);
+    const avg =
+        validSleepTimes.reduce((a, b) => a + b, 0) / validSleepTimes.length;
+    const min = Math.min(...validSleepTimes);
+    const max = Math.max(...validSleepTimes);
 
     const newSleepDataFormat = sleepData.map((item) => {
         return {
@@ -74,7 +70,7 @@ export default function SleepTracker() {
                 ? item.sleepTime.split("T")[1]
                 : "No info",
             wakeTime: item.wakeTime ? item.wakeTime.split("T")[1] : "No info",
-            rating: item.rating ? item.rating : "No info",
+            timeSlept: item.timeSlept ? item.timeSlept + " hrs." : "No info",
         };
     });
 
@@ -86,8 +82,8 @@ export default function SleepTracker() {
                 return "Sleep Time";
             case "wakeTime":
                 return "Wake Time";
-            case "rating":
-                return "Feelings";
+            case "timeSlept":
+                return "Time Slept";
             default:
                 return key;
         }
@@ -99,6 +95,7 @@ export default function SleepTracker() {
             showsVerticalScrollIndicator={false}
         >
             <View style={style.statsBlock}>
+                <AppText style={style.title}>Your Stats</AppText>
                 <AppText style={style.text}>
                     Mean: {avg.toFixed(2)} hrs.
                 </AppText>
